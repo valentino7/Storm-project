@@ -1,5 +1,10 @@
-package sdcc2018.storm.entity;
+package sdcc2018.spring.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Component;
 
 public class Sensor {
 
@@ -15,10 +20,6 @@ public class Sensor {
         this.speed = vel;
         this.numVehicles = nv;
     }
-
-    public Sensor(){
-    }
-
 
 
     public int getIntersection() {

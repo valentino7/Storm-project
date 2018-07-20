@@ -1,46 +1,70 @@
-package sdcc2018.storm.entity;
+package sdcc2018.spring.domain;
 
-import sdcc2018.storm.costant.Costant;
-import com.tdunning.math.stats.AVLTreeDigest;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Component;
 import com.tdunning.math.stats.TDigest;
+import org.springframework.stereotype.Indexed;
 
 import java.util.Comparator;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@Component
+@Document(collection = "Intersection")
 public class Intersection implements Comparator<Intersection> {
 
-    private List<Sensor> l;
-    private int id;
+
+    @Id
+    private String id;
+
+    @Field("idIntersection")
+    private int idIntersection;
+
+    @Field("meanSpeed")
     private double VelocitaMedia;
+
+    @Field("medianVehicles")
     private double medianaVeicoli;
+
+    @Field("numVehicles")
     private int numeroVeicoli;
-    private TDigest td1;
+
+    @Field("semaphoreList")
+    private List<Semaphore> semaphoreList;
+
+    @Field("phaseList")
     private List<Phase> phases;
 
-    public Intersection(){
+    private TDigest td1;
 
-    }
 
-    public Intersection(List<Sensor> l, int id) {
+    /*public Intersection(List<Semaphore> l, int id) {
         this.l = l;
         this.id = id;
         this.td1= new AVLTreeDigest(Costant.COMPRESSION);
+    }*/
+
+    public List<Semaphore> getL() {
+        return this.semaphoreList;
     }
 
-    public List<Sensor> getL() {
-        return l;
-    }
-
-    public void setL(List<Sensor> l) {
-        this.l = l;
+    public void setL(List<Semaphore> l) {
+        this.semaphoreList = l;
     }
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

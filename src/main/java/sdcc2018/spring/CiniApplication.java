@@ -1,4 +1,4 @@
-package sdcc2018.cini;
+package sdcc2018.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

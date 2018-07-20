@@ -1,18 +1,33 @@
-package sdcc2018.storm.entity;
+package sdcc2018.spring.domain;
 
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Component;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Component
 public class Phase {
+
+    @Field("id")
     private int id;
+
+    @Field("green")
     private int green;
+
+    @Field("red")
     private int red;
+
     private double effective_green;
     private double effective_red;
     private double ratioFlowSaturation;
 
     public Phase(int id) {
         this.id = id;
-    }
-    public Phase(){
-
     }
 
     public int getId() {

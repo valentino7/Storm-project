@@ -38,8 +38,40 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.tdunning</groupId>
+			<artifactId>t-digest</artifactId>
+			<version>3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Storm library -->
@@ -89,17 +121,15 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>com.tdunning</groupId>
-			<artifactId>t-digest</artifactId>
-			<version>3.2</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.kylin</groupId>
 			<artifactId>kylin-core-common</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+
+
 
 	</dependencies>
 
