@@ -66,7 +66,7 @@ public class Costant {
     public static final int NUM_SPOUT_QUERY_1=1;
     public static final int NUM_SPOUT_QUERY_2=1;
 
-   public static final String TOPOLOGY_QUERY_1="topologiaClassifica";
+    public static final String TOPOLOGY_QUERY_1="topologiaClassifica";
     public static final String TOPOLOGY_QUERY_2="topologiaMediana";
     public static final String SPOUT ="semaphore";
     public static final String FILTER_QUERY_1 = "filterBolt";

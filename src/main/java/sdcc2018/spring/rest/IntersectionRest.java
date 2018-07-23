@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sdcc2018.spring.domain.Intersection;
+import sdcc2018.spring.domain.IntersectionGUI;
 import sdcc2018.spring.service.IntersectionService;
 import sdcc2018.spring.service.SemaphoreService;
 
@@ -20,17 +20,17 @@ public class IntersectionRest {
     private IntersectionService intersectionService;
 
     @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Intersection> createIntersection(@RequestBody Intersection intersection) {
+    public ResponseEntity<IntersectionGUI> createIntersection(@RequestBody IntersectionGUI intersection) {
         return new ResponseEntity<>(intersectionService.createIntersection(intersection), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/findAll", method = RequestMethod.GET)
-    public ResponseEntity<ArrayList<Intersection>> findAll() {
+    public ResponseEntity<ArrayList<IntersectionGUI>> findAll() {
         return new ResponseEntity<>(intersectionService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(path = "findByID/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Intersection> findByIdIntersection(@PathVariable int id) {
+    public ResponseEntity<IntersectionGUI> findByIdIntersection(@PathVariable int id) {
         return new ResponseEntity<>(intersectionService.findByIdIntersection(id), HttpStatus.OK);
     }
 
