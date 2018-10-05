@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path = "/intersection")
+@CrossOrigin
 public class IntersectionRest {
 
 
@@ -20,7 +21,7 @@ public class IntersectionRest {
 
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public ResponseEntity<IntersectionGUI> createIntersection(@RequestBody IntersectionGUI intersection) {
-        return new ResponseEntity<>(intersectionService.createIntersection(intersection), HttpStatus.CREATED);
+        return new ResponseEntity<>(intersectionService.createIntersection(intersection), HttpStatus.OK);
     }
 
     @RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
@@ -36,7 +37,6 @@ public class IntersectionRest {
     @RequestMapping(path = "findByID/{id}", method = RequestMethod.GET)
     public ResponseEntity<IntersectionGUI> findByIdIntersection(@PathVariable String id) {
         IntersectionGUI response = intersectionService.findByIdIntersection(id);
-
         return new ResponseEntity<>(response,response!= null ? HttpStatus.OK:  HttpStatus.NOT_FOUND);
     }
 

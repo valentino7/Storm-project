@@ -16,8 +16,9 @@ import org.springframework.stereotype.Component;
 @Document(collection = "Semaphore")
 public class SemaphoreGUI {
 
+
     @Field("id")
-    private int id; //0,1,2,3
+    private int idSem; //0,1,2,3
 
     @Field("longitude")
     private float longitude;
@@ -33,9 +34,5 @@ public class SemaphoreGUI {
 
     @Field("saturation")
     private double saturation;//variabile per ogni semaforo
-
-
-
-
 
 }

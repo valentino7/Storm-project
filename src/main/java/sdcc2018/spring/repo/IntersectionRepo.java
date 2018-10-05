@@ -9,7 +9,7 @@ import java.util.ArrayList;
 @Repository
 public interface IntersectionRepo extends MongoRepository<IntersectionGUI, String> {
 
-    IntersectionGUI findByidIntersection(String id);
+    IntersectionGUI findByid(String id);
     ArrayList<IntersectionGUI> findAll();
 
 }
