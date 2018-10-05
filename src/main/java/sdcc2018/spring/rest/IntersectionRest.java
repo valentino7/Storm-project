@@ -19,6 +19,7 @@ public class IntersectionRest {
     @Autowired
     private IntersectionService intersectionService;
 
+
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public ResponseEntity<IntersectionGUI> createIntersection(@RequestBody IntersectionGUI intersection) {
         return new ResponseEntity<>(intersectionService.createIntersection(intersection), HttpStatus.OK);
