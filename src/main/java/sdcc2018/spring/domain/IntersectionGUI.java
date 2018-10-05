@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.tdunning.math.stats.TDigest;
 import org.springframework.stereotype.Indexed;
 
+import javax.validation.constraints.NotNull;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,6 +31,16 @@ public class IntersectionGUI {
     @Field("semaphoreList")
     private List<SemaphoreGUI> semaphoreList;
 
+    public List<SemaphoreGUI> getSemaphoreList() {
+        return semaphoreList;
+    }
 
+    public void setSemaphoreList(List<SemaphoreGUI> semaphoreList) {
+        this.semaphoreList = semaphoreList;
+    }
+
+    public void updateIntersection(@NotNull IntersectionGUI newIntersection) {
+        this.semaphoreList = newIntersection.semaphoreList;
+    }
 
 }

@@ -14,8 +14,7 @@ import java.util.ArrayList;
 @RequestMapping(path = "/intersection")
 public class IntersectionRest {
 
-    @Autowired
-    private SemaphoreService semaphoreService;
+
     @Autowired
     private IntersectionService intersectionService;
 
@@ -24,18 +23,25 @@ public class IntersectionRest {
         return new ResponseEntity<>(intersectionService.createIntersection(intersection), HttpStatus.CREATED);
     }
 
+    @RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<IntersectionGUI> updateIntersection(@PathVariable String id,@RequestBody IntersectionGUI intersection) {
+        return new ResponseEntity<>(intersectionService.updateIntersection(id,intersection), HttpStatus.OK);
+    }
+
     @RequestMapping(path = "/findAll", method = RequestMethod.GET)
     public ResponseEntity<ArrayList<IntersectionGUI>> findAll() {
         return new ResponseEntity<>(intersectionService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(path = "findByID/{id}", method = RequestMethod.GET)
-    public ResponseEntity<IntersectionGUI> findByIdIntersection(@PathVariable int id) {
-        return new ResponseEntity<>(intersectionService.findByIdIntersection(id), HttpStatus.OK);
+    public ResponseEntity<IntersectionGUI> findByIdIntersection(@PathVariable String id) {
+        IntersectionGUI response = intersectionService.findByIdIntersection(id);
+
+        return new ResponseEntity<>(response,response!= null ? HttpStatus.OK:  HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(path = "deleteById/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> deleteIntersection(@PathVariable int id) {
+    public ResponseEntity<Boolean> deleteIntersection(@PathVariable String id) {
         boolean response = intersectionService.deleteIntersection(id);
         return new ResponseEntity<>(response, response ? HttpStatus.OK: HttpStatus.NOT_FOUND);
     }
