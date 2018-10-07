@@ -1,8 +1,9 @@
 package sdcc2018.storm.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class IntersectionControl extends Intersection {
+public class IntersectionControl extends Intersection implements Serializable {
 
     private List<Phase> phases;
     private int numeroVeicoli;
@@ -33,7 +34,7 @@ public class IntersectionControl extends Intersection {
 
     @Override
     public String toString(){
-        return "verdeFase1"+this.getPhases().get(0).getGreen() + " verdeFase2"+this.getPhases().get(1).getGreen();
+        return "verdeFase1 : "+this.getPhases().get(0).getGreen() + " verdeFase2 : "+this.getPhases().get(1).getGreen();
     }
 
 

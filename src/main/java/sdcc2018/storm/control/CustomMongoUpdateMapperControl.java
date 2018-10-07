@@ -14,7 +14,7 @@ public class CustomMongoUpdateMapperControl implements MongoMapper {
     @Override
     public Document toDocument(ITuple tuple) {
         Document document = new Document();
-        List<IntersectionControl> listToSave= (List<IntersectionControl>) tuple.getValueByField(Costant.RANK_TOPK);
+        List<IntersectionControl> listToSave= (List<IntersectionControl>) tuple.getValueByField(Costant.PHASE);
         int j= 0;
         document.append(Costant.PHASE,"test");
         for ( IntersectionControl i : listToSave){

@@ -33,6 +33,9 @@ public class WebsterBolt extends BaseBasicBolt {
         p1.setGreen(calculateGreen(p1.getEffective_green()));
         p2.setGreen(calculateGreen(p2.getEffective_green()));
 
+        System.out.println(p1.getEffective_green());
+        System.out.println(p2.getEffective_green());
+
         p1.setRed(calculateRed(p1.getGreen()));
         p2.setRed(calculateRed(p2.getGreen()));
 
@@ -69,7 +72,7 @@ public class WebsterBolt extends BaseBasicBolt {
             webster(i);
             System.err.println(i);
         }
-        collector.emit(new Values(listToEmit));
+        //collector.emit(new Values(listToEmit));
     }
 
     @Override
