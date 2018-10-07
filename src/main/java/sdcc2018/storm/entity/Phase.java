@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class Phase implements Serializable {
     private int id;
-    private int green;
-    private int red;
-    private double effective_green;
-    private double effective_red;
-    private double ratioFlowSaturation;
+    private int green;//green time
+    private int red;//red time
+    private double effective_green;//effective green time
+    private double effective_red;//effective red time
+    private double ratioFlowSaturation;//rapporto flusso/saturazione
 
     public Phase(int id) {
         this.id = id;
