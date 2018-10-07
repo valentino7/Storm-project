@@ -11,11 +11,12 @@ public class Sensor implements Serializable {
     private int numVehicles;
     private double saturation;
 
-    public Sensor(int i, int s, double vel, int nv){
+    public Sensor(int i, int s, double vel, int nv, double saturation){
         this.intersection = i;
         this.trafficLight = s;
         this.speed = vel;
         this.numVehicles = nv;
+        this.saturation=saturation;
     }
 
     public Sensor(){
