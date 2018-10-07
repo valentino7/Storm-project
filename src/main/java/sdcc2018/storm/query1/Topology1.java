@@ -63,7 +63,7 @@ public class Topology1 {
 
      protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, JsonNode> spoutConfig) {
          String urlMongoDB=properties.getProperty("urlMongoDB");
-         String collectionName= properties.getProperty("collectionName");
+         String collectionName= properties.getProperty("collectionNameRank");
          MongoMapper mapperUpdate = new CustomMongoUpdateMapperQuery1()
                  .withFields(Costant.ID, Costant.RANK_TOPK);
 

@@ -66,11 +66,11 @@ public class TopologyGreeenDuration {
 
      protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, JsonNode> spoutConfig) {
          String urlMongoDB=properties.getProperty("urlMongoDB");
-         String collectionName= properties.getProperty("collectionName");
+         String collectionName= properties.getProperty("collectionNameControl");
          MongoMapper mapperUpdate = new CustomMongoUpdateMapperControl()
-                 .withFields(Costant.ID, Costant.RANK_TOPK);
+                 .withFields(Costant.PHASE);
 
-         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID);
+         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.PHASE);
 
          MongoUpdateBolt mongoDBWebster = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
 

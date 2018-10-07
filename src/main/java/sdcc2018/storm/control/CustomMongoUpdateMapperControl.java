@@ -14,17 +14,15 @@ public class CustomMongoUpdateMapperControl implements MongoMapper {
     @Override
     public Document toDocument(ITuple tuple) {
         Document document = new Document();
-        String id = (String) tuple.getValueByField(Costant.ID);
-        document.append( "id" , id  );
         List<IntersectionControl> listToSave= (List<IntersectionControl>) tuple.getValueByField(Costant.RANK_TOPK);
-        for ( int j = 0 ; j < listToSave.size() ; j++){
-            IntersectionControl intersection = listToSave.get(j);
+        int j= 0;
+        document.append(Costant.PHASE,"test");
+        for ( IntersectionControl i : listToSave){
             Document documentToAnnidate = new Document();
-            documentToAnnidate.append( "classifica", j+1 );
-            documentToAnnidate.append( "id", intersection.getId());
-
-            // DA FINIRE
-            document.append( "valore "+ (j+1) , documentToAnnidate);
+            documentToAnnidate.append( "fase1-verde", i.getPhases().get(0).getGreen());
+            documentToAnnidate.append( "fase2-verde", i.getPhases().get(1).getGreen());
+            document.append( ""+j , documentToAnnidate);
+            j++;
         }
         return new Document("$set", document);
     }

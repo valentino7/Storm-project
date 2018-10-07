@@ -12,6 +12,7 @@ import sdcc2018.storm.entity.IntersectionControl;
 import sdcc2018.storm.entity.Sensor;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class SumBolt extends BaseWindowedBolt{
                 map.put(l.getId(),l);
             }
         }
-        collector.emit(new Values(map));
+        collector.emit(new Values(createList(map)));
     }
 
 
@@ -58,4 +59,14 @@ public class SumBolt extends BaseWindowedBolt{
         }
         return oldi;
     }
+
+    private List<IntersectionControl> createList(HashMap<Integer,IntersectionControl> mappa){
+        List<IntersectionControl> list = new ArrayList<>();
+        for (IntersectionControl i : mappa.values()) {
+            list.add(i);
+            mappa.remove(i);
+        }
+        return list;
+    }
+
 }

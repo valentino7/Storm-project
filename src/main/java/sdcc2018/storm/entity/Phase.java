@@ -1,6 +1,8 @@
 package sdcc2018.storm.entity;
 
-public class Phase {
+import java.io.Serializable;
+
+public class Phase implements Serializable {
     private int id;
     private int green;
     private int red;

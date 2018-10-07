@@ -4,6 +4,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.IntersectionControl;
 import sdcc2018.storm.entity.Phase;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebsterBolt extends BaseBasicBolt {
+
     private void webster(IntersectionControl i){
         List<Sensor> list_s=i.getL();
         // ordinare lista list_s;
@@ -62,14 +64,16 @@ public class WebsterBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        for(IntersectionControl i:(ArrayList<IntersectionControl>)input.getValueByField(Costant.MAP_INTERSECTION)){
+        ArrayList<IntersectionControl> listToEmit =(ArrayList<IntersectionControl>)input.getValueByField(Costant.MAP_INTERSECTION);
+        for(IntersectionControl i: listToEmit){
             webster(i);
+            System.err.println(i);
         }
-        return;
+        collector.emit(new Values(listToEmit));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields( Costant.PHASE));
+        declarer.declare(new Fields( Costant.PHASE ));
     }
 }
