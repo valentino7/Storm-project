@@ -6,6 +6,15 @@ public class CustomSensor {
     private double saturation;
     private double latitude;
     private double longitude;
+    private String stateTrafficLight[];
+
+    public String[] getStateTrafficLight() {
+        return stateTrafficLight;
+    }
+
+    public void setStateTrafficLight(String[] stateTrafficLight) {
+        this.stateTrafficLight = stateTrafficLight;
+    }
 
     public CustomSensor(int intersection, int trafficLight, double saturation, double latitude, double longitude) {
         this.intersection = intersection;
@@ -13,6 +22,10 @@ public class CustomSensor {
         this.saturation = saturation;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.stateTrafficLight=new String[3];
+        stateTrafficLight[0]=new String("OK");
+        stateTrafficLight[1]=new String("OK");
+        stateTrafficLight[2]=new String("OK");
     }
 
     public int getIntersection() {
@@ -56,6 +69,6 @@ public class CustomSensor {
     }
     @Override
     public String toString(){
-        return "id="+intersection+",idsem="+trafficLight+",saturation="+saturation+",latitude="+latitude+",longitude="+longitude;
+        return "id="+intersection+",idsem="+trafficLight+",saturation="+saturation+",latitude="+latitude+",longitude="+longitude+",light1="+stateTrafficLight[0]+",light2="+stateTrafficLight[1]+",light3="+stateTrafficLight[2];
     }
 }

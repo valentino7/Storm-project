@@ -1,32 +1,30 @@
 package sdcc2018.storm.entity.mongodb;
 
-import java.util.List;
-
 public class IntersectionGUI {
-    private int id;
-    private CustomSensor[] listSens=new CustomSensor[4];
+    private int idIntersection;
+    private CustomSensor[] SensorList=new CustomSensor[4];
     private CustomPhase[] listPhase=new CustomPhase[2];
 
-    public IntersectionGUI(CustomSensor[] listSens, int id, CustomPhase[] listPhase) {
-        this.listSens = listSens;
-        this.id = id;
+    public IntersectionGUI(int idIntersection,CustomSensor[] SensorList, CustomPhase[] listPhase) {
+        this.idIntersection = idIntersection;
+        this.SensorList = SensorList;
         this.listPhase = listPhase;
     }
 
-    public int getId() {
-        return id;
+    public int getIdIntersection() {
+        return idIntersection;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdIntersection(int id) {
+        this.idIntersection = id;
     }
 
-    public CustomSensor[] getListSens() {
-        return listSens;
+    public CustomSensor[] getSensorList() {
+        return SensorList;
     }
 
-    public void setListSens(CustomSensor[] listSens) {
-        this.listSens = listSens;
+    public void setSensorList(CustomSensor[] listSens) {
+        this.SensorList = listSens;
     }
 
     public CustomPhase[] getListPhase() {
@@ -36,9 +34,10 @@ public class IntersectionGUI {
     public void setListPhase(CustomPhase[] listPhase) {
         this.listPhase = listPhase;
     }
+
     @Override
     public String toString(){
-        return "id="+id+",phases="+listPhase[0].toString()+","+listPhase[1].toString()+",sensors="+listSens[0].toString()+
-                ","+listSens[1].toString()+","+listSens[2].toString()+","+listSens[3].toString();
+        return "id="+idIntersection+",sensors="+SensorList[0].toString()+
+                ","+SensorList[1].toString()+","+SensorList[2].toString()+","+SensorList[3].toString()+",phases="+listPhase[0].toString()+","+listPhase[1].toString();
     }
 }

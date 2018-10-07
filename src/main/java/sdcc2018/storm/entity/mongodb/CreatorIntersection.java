@@ -36,7 +36,8 @@ public class CreatorIntersection {
                 double longitude=2;
                 customSensor[j]=new CustomSensor(id,j,saturation,latitude,longitude);
             }
-            intersectionGUI=new IntersectionGUI(customSensor,id,CustomPhase.randomPhase());
+            intersectionGUI=new IntersectionGUI(id,customSensor,CustomPhase.randomPhase());
+            System.out.println(intersectionGUI);
             JsonNode jsonNode=objectMapper.valueToTree(intersectionGUI);
             System.out.println(jsonNode);
             document = Document.parse(jsonNode.toString() );
