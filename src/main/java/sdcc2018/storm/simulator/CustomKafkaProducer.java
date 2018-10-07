@@ -57,7 +57,6 @@ public class CustomKafkaProducer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

@@ -8,7 +8,6 @@ public abstract class Intersection implements Serializable {
     private List<Sensor> l;
     private int id;
 
-
     public Intersection() {
     }
 
