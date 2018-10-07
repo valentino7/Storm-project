@@ -7,6 +7,14 @@ public class CustomSensor {
     private double latitude;
     private double longitude;
 
+    public CustomSensor(int intersection, int trafficLight, double saturation, double latitude, double longitude) {
+        this.intersection = intersection;
+        this.trafficLight = trafficLight;
+        this.saturation = saturation;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public int getIntersection() {
         return intersection;
     }
@@ -45,5 +53,9 @@ public class CustomSensor {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+    @Override
+    public String toString(){
+        return "id="+intersection+",idsem="+trafficLight+",saturation="+saturation+",latitude="+latitude+",longitude="+longitude;
     }
 }
