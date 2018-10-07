@@ -50,7 +50,7 @@ public class Topology1 {
             conf.setMaxTaskParallelism(3);
             //conf.setNumWorkers(3);
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology(properties.getProperty("topologyName"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
+            cluster.submitTopology(properties.getProperty("topologyName1"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
         }
     }
 
@@ -116,7 +116,7 @@ public class Topology1 {
         KafkaTranslator kafkaTranslator = new KafkaTranslator();
         Builder<String,JsonNode> kafkaSpoutConfigBuilder = new Builder(bootstrapServers, StringDeserializer.class, org.apache.kafka.connect.json.JsonDeserializer.class, topicName);
         return kafkaSpoutConfigBuilder
-                .setProp(ConsumerConfig.GROUP_ID_CONFIG,properties.getProperty("nameConsumerGroup"))
+                .setProp(ConsumerConfig.GROUP_ID_CONFIG,properties.getProperty("nameConsumerGroup1"))
                 //.setRetry(getRetryService())
                 //.setOffsetCommitPeriodMs(10_000)
                 .setFirstPollOffsetStrategy(LATEST)

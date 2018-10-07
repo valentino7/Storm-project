@@ -11,7 +11,6 @@ public class Sensor implements Serializable {
     private int numVehicles;//numero veicoli
     private double saturation;//saturazione
 
-
     public Sensor(int i, int s, double vel, int nv, double saturation){
         this.intersection = i;
         this.trafficLight = s;

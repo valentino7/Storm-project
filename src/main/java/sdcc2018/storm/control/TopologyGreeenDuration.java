@@ -48,7 +48,7 @@ public class TopologyGreeenDuration {
             System.out.println("Create local cluster");
             conf.setMaxTaskParallelism(3);
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology(properties.getProperty("topologyName"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
+            cluster.submitTopology(properties.getProperty("topologyName3"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
             //shutdown the cluster
             /*Thread.sleep(15000);
              cluster.killTopology(properties.getProperty("topologyName"));
@@ -92,7 +92,7 @@ public class TopologyGreeenDuration {
         KafkaTranslator kafkaTranslator = new KafkaTranslator();
         KafkaSpoutConfig.Builder<String,JsonNode> kafkaSpoutConfigBuilder = new KafkaSpoutConfig.Builder(bootstrapServers, StringDeserializer.class, org.apache.kafka.connect.json.JsonDeserializer.class, topicName);
         return kafkaSpoutConfigBuilder
-                .setProp(ConsumerConfig.GROUP_ID_CONFIG,properties.getProperty("nameConsumerGroup"))
+                .setProp(ConsumerConfig.GROUP_ID_CONFIG,properties.getProperty("nameConsumerGroup3"))
                 //.setRetry(getRetryService())
                 //.setOffsetCommitPeriodMs(10_000)
                 .setFirstPollOffsetStrategy(LATEST)
