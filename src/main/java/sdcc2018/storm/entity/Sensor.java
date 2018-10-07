@@ -1,7 +1,9 @@
 package sdcc2018.storm.entity;
 
 
-public class Sensor {
+import java.io.Serializable;
+
+public class Sensor implements Serializable {
 
     private int intersection;
     private int trafficLight;

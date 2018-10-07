@@ -1,7 +1,7 @@
 package sdcc2018.storm.query1.bolt;
 
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.entity.Intersection;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.IntersectionQuery1;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -34,10 +34,11 @@ public class AvgBolt extends BaseWindowedBolt {
 
     @Override
     public void execute(TupleWindow inputWindow) {
-        HashMap<Integer, Intersection> mappa = new HashMap<>();
+        HashMap<Integer, IntersectionQuery1> mappa = new HashMap<>();
         List<Tuple> tupleList = inputWindow.get();//ottieni la lista di tuple in finestra
+        System.err.println(tupleList.size());
         for ( Tuple t : tupleList){
-            Intersection l = (Intersection) t.getValueByField(Costant.INTERSECTION);
+            IntersectionQuery1 l = (IntersectionQuery1) t.getValueByField(Costant.INTERSECTION);
             if(mappa.containsKey(l.getId())){//se la mappa contiene l'incrocio
                 mappa.put(l.getId(), processAvg(mappa.get(l.getId()),l));//aggiorna la media
             }
@@ -46,7 +47,7 @@ public class AvgBolt extends BaseWindowedBolt {
             }
         }
         //dalla mappa ogni avg bolt avrà vari incroci e li deve raggruppare per ottenere una classifica
-        List<Intersection> classifica = new ArrayList<>();
+        List<IntersectionQuery1> classifica = new ArrayList<>();
         for (Integer i : mappa.keySet() ) {
             classifica.add(mappa.get(i));//aggiungi l'incrocio nell hashmap
         }
@@ -54,7 +55,7 @@ public class AvgBolt extends BaseWindowedBolt {
         collector.emit(new Values(classifica));//emetti la classifica
     }
 
-    private Intersection processAvg(Intersection oldi, Intersection i){//aggiorna la media pesata tra 2 incroci
+    private IntersectionQuery1 processAvg(IntersectionQuery1 oldi, IntersectionQuery1 i){//aggiorna la media pesata tra 2 incroci
         int nTot = oldi.getNumeroVeicoli()+i.getNumeroVeicoli();
         double app=oldi.getVelocitaMedia()*oldi.getNumeroVeicoli()+i.getVelocitaMedia()*i.getNumeroVeicoli();
         i.setVelocitaMedia(app/nTot);

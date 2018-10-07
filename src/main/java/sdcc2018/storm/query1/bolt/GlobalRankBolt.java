@@ -1,13 +1,11 @@
 package sdcc2018.storm.query1.bolt;
 
-
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.entity.Intersection;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.IntersectionQuery1;
 import org.apache.storm.shade.org.apache.commons.collections.ListUtils;
-import org.apache.storm.task.OutputCollector;
-import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
@@ -15,12 +13,10 @@ import org.apache.storm.tuple.Values;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-public class GlobalRankBolt extends BaseRichBolt {
-    private OutputCollector collector;
-    private int countIntermediateRank;
-    private List<Intersection> globalRanking;
+public class GlobalRankBolt extends BaseBasicBolt {
+    private int countIntermediateRank = 0;
+    private List<IntersectionQuery1> globalRanking = new ArrayList<>();
     private String AvgType;
     private int repNum;
 
@@ -35,17 +31,10 @@ public class GlobalRankBolt extends BaseRichBolt {
         declarer.declare(new Fields(Costant.ID,Costant.RANK_TOPK));
     }
 
-    @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        this.collector = outputCollector;
-        globalRanking = new ArrayList<>();
-        countIntermediateRank = 0;
-    }
 
     @Override
-    public void execute(Tuple tuple) {
-
-        List<Intersection> list = ( List<Intersection> ) tuple.getValueByField(Costant.PARTIAL_RANK);
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
+        List<IntersectionQuery1> list = ( List<IntersectionQuery1> ) tuple.getValueByField(Costant.PARTIAL_RANK);
         countIntermediateRank++;
         if(globalRanking.isEmpty()) {
             globalRanking = list;
@@ -62,7 +51,7 @@ public class GlobalRankBolt extends BaseRichBolt {
 
     }
 
-    private void sortOrderedRank( List<Intersection> list) {
+    private void sortOrderedRank( List<IntersectionQuery1> list) {
         if(globalRanking.size() < Costant.TOP_K) {
             //sorting e sublist10
             globalRanking=unionAndSort(globalRanking,list);
@@ -71,12 +60,19 @@ public class GlobalRankBolt extends BaseRichBolt {
         }
     }
 
-    private List<Intersection> unionAndSort(List<Intersection> list1, List<Intersection> list2){
-        List<Intersection> l = ListUtils.union(list1,list2);
-        Collections.sort(l,new Intersection());
-        if(l.size()> Costant.TOP_K)
-            l = l.subList(0,Costant.TOP_K);
-        return l;
+    private List<IntersectionQuery1> unionAndSort(List<IntersectionQuery1> list1, List<IntersectionQuery1> list2){
+        List<IntersectionQuery1> l = ListUtils.union(list1,list2);
+        Collections.sort(l,new IntersectionQuery1());
+        List<IntersectionQuery1> l2 = null;
+        if(l.size()> Costant.TOP_K) {
+            l2 = new ArrayList<>(l.subList(0, Costant.TOP_K));
+            return l2;
+        }
+        else{
+            return l;
+        }
+
     }
+
 
 }

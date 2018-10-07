@@ -1,28 +1,25 @@
 package sdcc2018.storm.query2.bolt;
 
-
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.entity.Intersection;
 import com.tdunning.math.stats.AVLTreeDigest;
 import com.tdunning.math.stats.TDigest;
-import org.apache.storm.task.OutputCollector;
-import org.apache.storm.task.TopologyContext;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.IntersectionQuery2;
+import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class GlobalMedianBolt extends BaseRichBolt {
+public class GlobalMedianBolt extends BaseBasicBolt {
     private int PreviousReplication;
     private String MedianType ;
-    private OutputCollector collector;
-    private int countMedian;
-    private List<Intersection> globalList;
-    private TDigest globalTDIgest;
+    private int countMedian = 0;
+    private List<IntersectionQuery2> globalList=new ArrayList<>();
+    private TDigest globalTDIgest = new AVLTreeDigest(Costant.COMPRESSION);
 
     public GlobalMedianBolt(String s, int rep) {
         this.MedianType = s;
@@ -35,31 +32,23 @@ public class GlobalMedianBolt extends BaseRichBolt {
     }
 
     @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        this.collector = outputCollector;
-        countMedian = 0;
-        globalTDIgest = new AVLTreeDigest(Costant.COMPRESSION);
-        globalList=new ArrayList<>();
-    }
-
-    @Override
-    public void execute(Tuple tuple) {
-        List<Intersection> intersections;
-        intersections= (List<Intersection>) tuple.getValueByField(Costant.LIST_INTERSECTION);
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
+        List<IntersectionQuery2> intersections;
+        intersections= (List<IntersectionQuery2>) tuple.getValueByField(Costant.LIST_INTERSECTION);
         globalList.addAll(intersections);
         countMedian++;
         for(int i=0;i!= intersections.size() ;i++){
             globalTDIgest.add(intersections.get(i).getTd1());
         }
         if(countMedian >= PreviousReplication) {
-            ArrayList<Intersection> listMax = new ArrayList<>();
+            ArrayList<IntersectionQuery2> listMax = new ArrayList<>();
             double quantil = globalTDIgest.quantile(Costant.QUANTIL);
-            for ( Intersection i : globalList) {
+            for ( IntersectionQuery2 i : globalList) {
                 if( i.getMedianaVeicoli() >= quantil ){
                     listMax.add(i);
                 }
             }
-          //  collector.emit(new Values(this.MedianType,listMax, quantil ));
+            collector.emit(new Values(this.MedianType,listMax, quantil ));
             System.out.println(this.MedianType +"   " + quantil + "   "+listMax.size());
             countMedian = 0;
             globalList=null;

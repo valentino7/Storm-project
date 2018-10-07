@@ -1,14 +1,13 @@
 package sdcc2018.storm.query2.bolt;
 
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.entity.Intersection;
-import sdcc2018.storm.entity.Sensor;
 import com.tdunning.math.stats.AVLTreeDigest;
 import com.tdunning.math.stats.TDigest;
-import org.apache.storm.task.OutputCollector;
-import org.apache.storm.task.TopologyContext;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.IntersectionQuery2;
+import sdcc2018.storm.entity.Sensor;
+import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
@@ -16,48 +15,38 @@ import org.apache.storm.tuple.Values;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FilterMedianBolt extends BaseRichBolt {
+public class FilterMedianBolt extends BaseBasicBolt {
     //bolt filtro riceve tupla di un sensore e invia una tupla incrocio quando ha ricevuto i 4 semafori
     //dello stesso incrocio
-    private OutputCollector collector;
-    //private Sensor s;
-    //private ObjectMapper mapper = new ObjectMapper();
-    private HashMap<Integer, Intersection> mappa;
-    private Intersection inc;
+    private HashMap<Integer, IntersectionQuery2> mappa=new HashMap<>();;
+    private IntersectionQuery2 inc;
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(Costant.ID,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_15M,new Fields(Costant.ID,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_1H,new Fields(Costant.ID,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_24H,new Fields(Costant.ID,Costant.INTERSECTION));
     }
-
-
     @Override
-    public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        this.collector = collector;
-        mappa = new HashMap<>();
-    }
-
-    @Override
-    public void execute(Tuple input) {
+    public void execute(Tuple input, BasicOutputCollector collector) {
         List<Sensor> lista = null;
-        //controllare integrità tupla e/o semaforo rotto
-        //JsonNode jsonNode = (JsonNode) input.getValueByField("sensore");
-        Sensor s=(Sensor) input.getValueByField(Costant.SENSOR);
+        Sensor s=(Sensor) input.getValueByField(Costant.F_RECORD);
 
         if ( mappa.containsKey(s.getIntersection()) ){
-            Intersection c;
+            IntersectionQuery2 c;
             c = mappa.get(s.getIntersection());
             c.getL().add(s);
             if ( c.getL().size() == Costant.SEM_INTERSEC ){
                 mappa.remove(s.getIntersection());
                 mediana(c);
-                collector.emit(new Values(c.getId(),c ) );
-                //System.out.println("FilterMedianBoltHaEMesso");
+                //collector.emit(new Values(c.getId(),c ) );
+                collector.emit(Costant.STREAM_15M,new Values(c.getId(),c )  );//emetti l'incrocio
+                collector.emit(Costant.STREAM_1H,new Values( c.getId(),c ) );//emetti l'incrocio
+                collector.emit(Costant.STREAM_24H,new Values(c.getId(),c )  );//emetti l'incrocio
             }
             else{
-                //sarebbe più sicuro fare remove e riaggiungere
                 mappa.remove(c.getId());
                 mappa.put(s.getIntersection(),c);
             }
@@ -65,15 +54,15 @@ public class FilterMedianBolt extends BaseRichBolt {
         else {
             lista = new ArrayList<>();
             lista.add(s);
-            inc = new Intersection(lista, s.getIntersection());
+            inc = new IntersectionQuery2(lista, s.getIntersection());
             mappa.put(s.getIntersection(), inc );
         }
     }
 
-    private void mediana(Intersection c){
+    private void mediana(IntersectionQuery2 c){
         //calcola mediana dell'incrocio
         TDigest td1 = new AVLTreeDigest(Costant.COMPRESSION);
-        for(int i=0;i!=Costant.SEM_INTERSEC;i++){//cambiare il 4 con Constant. ecc
+        for(int i=0;i!=Costant.SEM_INTERSEC;i++){
             td1.add(c.getL().get(i).getNumVehicles());
         }
         c.setMedianaVeicoli(td1.quantile(Costant.QUANTIL));

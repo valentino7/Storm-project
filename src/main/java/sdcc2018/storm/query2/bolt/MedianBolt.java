@@ -1,7 +1,7 @@
 package sdcc2018.storm.query2.bolt;
 
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.entity.Intersection;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.IntersectionQuery2;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class MedianBolt extends BaseWindowedBolt {
 
     private OutputCollector collector;
-    private HashMap<Integer, Intersection> mappa;
+    private HashMap<Integer, IntersectionQuery2> mappa;
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
@@ -37,7 +37,7 @@ public class MedianBolt extends BaseWindowedBolt {
     public void execute(TupleWindow inputWindow) {
         List<Tuple> tupleList = inputWindow.get();
         for ( Tuple t : tupleList){
-            Intersection l = (Intersection) t.getValueByField(Costant.INTERSECTION);
+            IntersectionQuery2 l = (IntersectionQuery2) t.getValueByField(Costant.INTERSECTION);
             if(mappa.containsKey(l.getId())){
                 mappa.put(l.getId(), processMed(mappa.get(l.getId()),l));
             }
@@ -45,15 +45,15 @@ public class MedianBolt extends BaseWindowedBolt {
                 mappa.put(l.getId(),l);
             }
         }
-        List<Intersection> listamediane = createList(mappa);
+        List<IntersectionQuery2> listamediane = createList(mappa);
         collector.emit(new Values(listamediane));
 
 
     }
 
-    private List<Intersection> createList(HashMap<Integer,Intersection> mappa){
-        List<Intersection> med = new ArrayList<>();
-        for (Intersection i : mappa.values()) {
+    private List<IntersectionQuery2> createList(HashMap<Integer,IntersectionQuery2> mappa){
+        List<IntersectionQuery2> med = new ArrayList<>();
+        for (IntersectionQuery2 i : mappa.values()) {
             i.setMedianaVeicoli(i.getTd1().quantile(Costant.QUANTIL));
             med.add(i);
             mappa.remove(i);
@@ -61,7 +61,7 @@ public class MedianBolt extends BaseWindowedBolt {
         return med;
     }
 
-    private Intersection processMed(Intersection oldi, Intersection newi){
+    private IntersectionQuery2 processMed(IntersectionQuery2 oldi, IntersectionQuery2 newi){
         oldi.getTd1().add(newi.getTd1());
         return oldi;
     }

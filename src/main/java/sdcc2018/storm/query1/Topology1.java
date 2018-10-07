@@ -1,77 +1,98 @@
 package sdcc2018.storm.query1;
 
-import org.apache.storm.StormSubmitter;
-import sdcc2018.spring.costant.Costant;
-import sdcc2018.storm.query1.bolt.AvgBolt;
-import sdcc2018.storm.query1.bolt.FilterBolt;
-import sdcc2018.storm.query1.bolt.GlobalRankBolt;
-import sdcc2018.storm.query1.bolt.IntermediateRankBolt;
-import sdcc2018.storm.spout.SpoutTraffic;
+import com.fasterxml.jackson.databind.JsonNode;
+import sdcc2018.storm.entity.Costant;
+import sdcc2018.storm.entity.KafkaTranslator;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.StormTopology;
+import org.apache.storm.kafka.spout.KafkaSpout;
+import org.apache.storm.kafka.spout.KafkaSpoutConfig;
+import org.apache.storm.kafka.spout.KafkaSpoutConfig.Builder;
+import org.apache.storm.mongodb.bolt.MongoUpdateBolt;
+import org.apache.storm.mongodb.common.QueryFilterCreator;
+import org.apache.storm.mongodb.common.SimpleQueryFilterCreator;
+import org.apache.storm.mongodb.common.mapper.MongoMapper;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt.Duration;
 import org.apache.storm.tuple.Fields;
+import sdcc2018.storm.query1.bolt.*;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
+
+import static org.apache.storm.kafka.spout.KafkaSpoutConfig.FirstPollOffsetStrategy.LATEST;
 
 public class Topology1 {
 
-    private static final String KAFKA_LOCAL_BROKER = "localhost:9092";
-    public static final String TOPIC_0 = "classifica";
     private Properties properties;
 
+    public Topology1()throws Exception{
+        properties=new Properties();
+        InputStream is=this.getClass().getResourceAsStream("/config.properties");
+        properties.load(is);
+    }
     public static void main(String[] args) throws Exception {
-        Properties prova = new Properties();
-        prova.load(new FileInputStream("config.properties"));
-        System.err.println(prova.getProperty("nome"));
-
-        //new Topology1().runMain(args);
-        ///
+        new Topology1().runMain(args);
     }
 
     protected void runMain(String[] args) throws Exception {
-        Config tpConf = getConfig();
-
-        /*// Produttore
-        Produttore p = new Produttore();
-        p.inviaRecord();
-        p.terminaProduttore();*/
-
-        // run local cluster
-    /*    tpConf.setMaxTaskParallelism(Costant.NUM_PARALLELISM);
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology(Costant.TOPOLOGY_QUERY_1, tpConf, getTopology());
-*/
-        //run jar
-        System.setProperty("storm.jar", "path-to-jar");
-        StormSubmitter.submitTopology(Costant.TOPOLOGY_QUERY_1, tpConf, getTopology());
+        Config conf=this.getConfig();
+        if (args != null && args.length > 0) {
+            System.out.println("argument1=" + args[0]);
+            conf.setNumWorkers(3);
+            StormSubmitter.submitTopologyWithProgressBar(properties.getProperty("topologyName"), conf, this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
+        } else {
+            System.out.println("Create local cluster");
+            conf.setMaxTaskParallelism(3);
+            //conf.setNumWorkers(3);
+            LocalCluster cluster = new LocalCluster();
+            cluster.submitTopology(properties.getProperty("topologyName"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
+            //shutdown the cluster
+            /*Thread.sleep(15000);
+             cluster.killTopology(properties.getProperty("topologyName"));
+             cluster.shutdown();
+             System.exit(0);*/
+        }
     }
 
-    protected Config getConfig() {
+    protected Config getConfig(){
         Config config = new Config();
         config.setDebug(false);
-        config.setMessageTimeoutSecs(Costant.MESSAGE_TIMEOUT_SEC);
+        config.setMessageTimeoutSecs(30000);
         return config;
     }
 
-    protected StormTopology getTopology() {
+     protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, JsonNode> spoutConfig) {
+         String urlMongoDB=properties.getProperty("urlMongoDB");
+         String collectionName= properties.getProperty("collectionName");
+         MongoMapper mapperUpdate = new CustomMongoUpdateMapper()
+                 .withFields(Costant.ID, Costant.RANK_TOPK);
+
+         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID);
+
+         MongoUpdateBolt updateBolt15M = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
+         MongoUpdateBolt updateBolt1H = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
+         MongoUpdateBolt updateBolt24H = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
+         //if a new document should be inserted if there are no matches to the query filter
+         updateBolt15M.withUpsert(true);
+         updateBolt1H.withUpsert(true);
+         updateBolt24H.withUpsert(true);
+
         final TopologyBuilder tp = new TopologyBuilder();
+        tp.setSpout(Costant.KAFKA_SPOUT, new KafkaSpout(spoutConfig), Costant.NUM_SPOUT_QUERY_1);
+        tp.setBolt(Costant.FILTER_QUERY_1,new FilterBolt(),Costant.NUM_FILTER_QUERY1).shuffleGrouping(Costant.KAFKA_SPOUT);
 
-        tp.setSpout(Costant.SPOUT, new SpoutTraffic(), Costant.NUM_SPOUT_QUERY_1);
+        tp.setBolt(Costant.AVG15M_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(10)),Costant.NUM_AVG15M)
+                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_15M, new Fields(Costant.ID));
+        tp.setBolt(Costant.AVG1H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(20)),Costant.NUM_AVG1H)
+                .fieldsGrouping(Costant.FILTER_QUERY_1, Costant.STREAM_1H,new Fields(Costant.ID));
 
-        tp.setBolt(Costant.FILTER_QUERY_1,new FilterBolt(),Costant.NUM_FILTER_QUERY1).shuffleGrouping(Costant.SPOUT);
-
-        tp.setBolt(Costant.AVG15M_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(5)),Costant.NUM_AVG15M)
-                .fieldsGrouping(Costant.FILTER_QUERY_1, new Fields(Costant.ID));
-
-        tp.setBolt(Costant.AVG1H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(10)),Costant.NUM_AVG1H)
-                .fieldsGrouping(Costant.FILTER_QUERY_1, new Fields(Costant.ID));
-
-        tp.setBolt(Costant.AVG24H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(15)),Costant.NUM_AVG24H)
-                .fieldsGrouping(Costant.FILTER_QUERY_1, new Fields(Costant.ID));
+        tp.setBolt(Costant.AVG24H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(40)),Costant.NUM_AVG24H)
+                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_24H,new Fields(Costant.ID));
 
         tp.setBolt(Costant.INTERMEDIATERANK_15M, new IntermediateRankBolt(), Costant.NUM_INTERMEDIATERANK15M)
                 .shuffleGrouping(Costant.AVG15M_BOLT);
@@ -90,41 +111,22 @@ public class Topology1 {
 
         tp.setBolt(Costant.GLOBAL24H_AVG, new GlobalRankBolt(Costant.ID24H,Costant.NUM_AVG24H),Costant.NUM_GLOBAL_BOLT)
                 .shuffleGrouping(Costant.INTERMEDIATERANK_24H);
+        tp.setBolt(Costant.MONGODB15M,updateBolt15M,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.GLOBAL15M_AVG);
+         tp.setBolt(Costant.MONGODB1H,updateBolt1H,Costant.NUM_MONGOBOLT1H).shuffleGrouping(Costant.GLOBAL1H_AVG);
+         tp.setBolt(Costant.MONGODB24H,updateBolt24H,Costant.NUM_MONGOBOLT24H).shuffleGrouping(Costant.GLOBAL24H_AVG);
         return tp.createTopology();
     }
+    public static KafkaSpoutConfig<String, JsonNode> getKafkaSpoutConfig(String bootstrapServers,String topicName,Properties properties) {
 
-    /*protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, String> spoutConfig) {
-        final TopologyBuilder tp = new TopologyBuilder();
-        tp.setSpout("kafka_spout", new KafkaSpout<>(spoutConfig), Costant.NUM_SPOUT_QUERY_1);
-        tp.setBolt("filterBolt",new FilterBolt(),Costant.NUM_FILTER).shuffleGrouping("kafka_spout");
-        tp.setBolt("avgBolt", new AvgBolt().withWindow(Duration.minutes(Costant.WINDOW_MIN),Duration.of(Costant.SEC_TUPLE)),Costant.NUM_AVG)
-                .fieldsGrouping("filterBolt", new Fields("id"));
-        tp.setBolt("intermediateRanking", new IntermediateRankBolt(), Costant.NUM_INTERMEDIATERANK)
-                .fieldsGrouping("avgBolt",new Fields("id"));
-        tp.setBolt("globalRank", new GlobalRankBolt(),1)
-                .allGrouping("intermediateRanking");
-        return tp.createTopology();
-    }
-
-    protected KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String bootstrapServers){
-        this.setProperties();
-        return KafkaSpoutConfig.builder(bootstrapServers,TOPIC_0)
-                .setProp(ConsumerConfig.GROUP_ID_CONFIG, "classificaTestGroup")
-                .setProp(properties)
-                .setRetry(getRetryService())
-                .setOffsetCommitPeriodMs(10000)
-                .setFirstPollOffsetStrategy(EARLIEST)
-                .setMaxUncommittedOffsets(250)
+        KafkaTranslator kafkaTranslator = new KafkaTranslator();
+        Builder<String,JsonNode> kafkaSpoutConfigBuilder = new Builder(bootstrapServers, StringDeserializer.class, org.apache.kafka.connect.json.JsonDeserializer.class, topicName);
+        return kafkaSpoutConfigBuilder
+                .setProp(ConsumerConfig.GROUP_ID_CONFIG,properties.getProperty("nameConsumerGroup"))
+                //.setRetry(getRetryService())
+                //.setOffsetCommitPeriodMs(10_000)
+                .setFirstPollOffsetStrategy(LATEST)
+                //.setMaxUncommittedOffsets(250)
+                .setRecordTranslator(kafkaTranslator)
                 .build();
     }
-
-    protected void setProperties() {
-        properties = new Properties();
-        properties.put("value.deserializer", "org.apache.kafka.connect.json.JsonDeserializer");
-    }
-    protected KafkaSpoutRetryService getRetryService() {
-        return new KafkaSpoutRetryExponentialBackoff(KafkaSpoutRetryExponentialBackoff.TimeInterval.microSeconds(500),
-                KafkaSpoutRetryExponentialBackoff.TimeInterval.milliSeconds(2), Integer.MAX_VALUE, KafkaSpoutRetryExponentialBackoff.TimeInterval.seconds(10));
-    }*/
-
 }
