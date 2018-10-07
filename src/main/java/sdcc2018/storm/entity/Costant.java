@@ -8,7 +8,10 @@ public class Costant {
     public static final String STREAM_15M= "stream15m";
     public static final String STREAM_1H= "stream1h";
     public static final String STREAM_24H= "stream24h";
-
+    public static final String MONGODBSTATEBOLT = "mongodbstatebolt";
+    public static final String CHECK_STATE_BOLT ="check_state_bolt" ;
+    public static final int NUM_CHECK_STATE_BOLT = 1;
+    public static final int NUM_MONGOBOLTSTATEBOLT = 1;
     public static final int TOP_K = 10;
     public static final String INTERMEDIATERANK_15M = "intermediate15M" ;
     public static final String INTERMEDIATERANK_1H = "intermediate1H" ;
