@@ -69,6 +69,7 @@
                             <mainClass>sdcc2018.storm.query1.Topology1</mainClass>
                             <mainClass>sdcc2018.storm.query2.Topology2</mainClass>
                             <mainClass>sdcc2018.storm.control.TopologyGreeenDuration</mainClass>
+                            <mainClass>sdcc2018.storm.stateTrafficLight.TopologyStateTrafficLight</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
