@@ -5,11 +5,11 @@ import java.io.Serializable;
 
 public class Sensor implements Serializable {
 
-    private int intersection;
-    private int trafficLight;
-    private double speed;
-    private int numVehicles;
-    private double saturation;
+    private int intersection;//intersezione di cui fa parte il sensore
+    private int trafficLight;//va da 0 a 3,specifica quale semaforo è della specifica intersezione
+    private double speed;//velocità media
+    private int numVehicles;//numero veicoli
+    private double saturation;//saturazione
 
     public Sensor(int i, int s, double vel, int nv, double saturation){
         this.intersection = i;
