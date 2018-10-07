@@ -51,11 +51,6 @@ public class Topology1 {
             //conf.setNumWorkers(3);
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology(properties.getProperty("topologyName"), conf,this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
-            //shutdown the cluster
-            /*Thread.sleep(15000);
-             cluster.killTopology(properties.getProperty("topologyName"));
-             cluster.shutdown();
-             System.exit(0);*/
         }
     }
 
@@ -69,7 +64,7 @@ public class Topology1 {
      protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, JsonNode> spoutConfig) {
          String urlMongoDB=properties.getProperty("urlMongoDB");
          String collectionName= properties.getProperty("collectionName");
-         MongoMapper mapperUpdate = new CustomMongoUpdateMapper()
+         MongoMapper mapperUpdate = new CustomMongoUpdateMapperQuery1()
                  .withFields(Costant.ID, Costant.RANK_TOPK);
 
          QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID);

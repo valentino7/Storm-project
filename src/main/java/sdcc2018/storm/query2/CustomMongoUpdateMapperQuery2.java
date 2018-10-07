@@ -9,7 +9,7 @@ import org.bson.Document;
 import java.util.List;
 
 
-public class CustomMongoUpdateMapper implements MongoMapper {
+public class CustomMongoUpdateMapperQuery2 implements MongoMapper {
 
     @Override
     public Document toDocument(ITuple tuple) {
@@ -30,7 +30,7 @@ public class CustomMongoUpdateMapper implements MongoMapper {
         return new Document("$set", document);
     }
 
-    public CustomMongoUpdateMapper withFields(String... fields) {
+    public CustomMongoUpdateMapperQuery2 withFields(String... fields) {
         return this;
     }
 }

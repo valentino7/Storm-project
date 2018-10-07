@@ -107,5 +107,7 @@ public class Costant {
     public static final String ID1H = "1H";
     public static final String ID24H = "24H";
     public static int TIME_ERROR = 1;
+    public static final String MONGODBWEBSTER="mongodbwebster";
+
 }
 
