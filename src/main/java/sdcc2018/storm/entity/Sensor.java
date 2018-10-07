@@ -11,6 +11,7 @@ public class Sensor implements Serializable {
     private int numVehicles;//numero veicoli
     private double saturation;//saturazione
 
+
     public Sensor(int i, int s, double vel, int nv, double saturation){
         this.intersection = i;
         this.trafficLight = s;
@@ -21,7 +22,48 @@ public class Sensor implements Serializable {
 
     public Sensor(){
     }
+    /*public Sensor(int i, int s, double vel, int nv, double saturation){
+        this.intersection = i;
+        this.trafficLight = s;
+        this.speed = vel;
+        this.numVehicles = nv;
+        this.saturation=saturation;
+    }
+    public Sensor(int i, int s, double vel, int nv,double saturation,double timestamp,double latitude,double longitude){
+        this.intersection = i;
+        this.trafficLight = s;
+        this.speed = vel;
+        this.numVehicles = nv;
+        this.saturation=saturation;
+        this.timestamp=timestamp;
+        this.latitude=latitude;
+        this.longitude=longitude;
+    }
+    public Sensor(){
+    }
+    public Sensor(int i, int s, double vel, int nv, double saturation,boolean state){
+        this.intersection = i;
+        this.trafficLight = s;
+        this.speed = vel;
+        this.numVehicles = nv;
+        this.saturation=saturation;
+        this.trafficLightState=new boolean[3];
+        this.trafficLightState[0]=Costant.OK;
+        this.trafficLightState[1]=Costant.OK;
+        this.trafficLightState[2]=Costant.OK;
+    }
+    public void setTrafficLightState(int id){
+        if(id<0 || id>2){
+            System.err.println("invalid id for sensor");
+            System.exit(0);
+        }
+        this.trafficLightState[id]=Costant.KO;
+        return;
+    }
 
+    public boolean[] getTrafficLightState() {
+        return trafficLightState;
+    }*/
 
 
     public int getIntersection() {
