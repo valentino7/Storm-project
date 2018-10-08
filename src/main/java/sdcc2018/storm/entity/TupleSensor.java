@@ -5,6 +5,15 @@ public class TupleSensor extends Sensor {
     private double longitude;
     private String stateTrafficLight[];
 
+    public TupleSensor(){
+    }
+
+    public TupleSensor(double latitude,double longitude,String stateTrafficLight[]){
+        super();
+        this.latitude=latitude;
+        this.longitude=longitude;
+        this.stateTrafficLight=stateTrafficLight;
+    }
     public double getLongitude() {
         return longitude;
     }
@@ -27,5 +36,9 @@ public class TupleSensor extends Sensor {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+    @Override
+    public String toString(){
+        return "";
     }
 }
