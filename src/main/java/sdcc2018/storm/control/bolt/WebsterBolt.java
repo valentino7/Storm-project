@@ -43,8 +43,6 @@ public class WebsterBolt extends BaseBasicBolt {
         phases.add(p1);
         phases.add(p2);
         i.setPhases(phases);
-
-
     }
 
     private double calculateMax(List<Sensor>list_s,int i,int j){

@@ -57,10 +57,12 @@ public class SumBolt extends BaseWindowedBolt{
         for (int i = 0; i < Costant.SEM_INTERSEC; i++) {
             sOld.get(i).setNumVehicles(sNew.get(i).getNumVehicles() + sOld.get(i).getNumVehicles());
         }
+        //oldi non viene modificato
         return oldi;
     }
 
     private List<IntersectionControl> createList(HashMap<Integer,IntersectionControl> mappa){
+        //verifica che da mappa trasforma in lista
         List<IntersectionControl> list = new ArrayList<>();
         for (IntersectionControl i : mappa.values()) {
             list.add(i);
