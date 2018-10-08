@@ -1,9 +1,6 @@
 package sdcc2018.storm.entity;
 
-public class TupleSensor extends Sensor {
-    private double latitude;
-    private double longitude;
-    private String stateTrafficLight[];
+/*public class TupleSensor extends Sensor {
 
     public TupleSensor(){
     }
@@ -41,4 +38,4 @@ public class TupleSensor extends Sensor {
     public String toString(){
         return "";
     }
-}
+}*/

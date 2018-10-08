@@ -10,6 +10,33 @@ public class Sensor implements Serializable {
     private double speed;//velocità media
     private int numVehicles;//numero veicoli
     private double saturation;//saturazione
+    private double latitude;
+    private double longitude;
+    private String stateTrafficLight[];
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String[] getStateTrafficLight() {
+        return stateTrafficLight;
+    }
+
+    public void setStateTrafficLight(String[] stateTrafficLight) {
+        this.stateTrafficLight = stateTrafficLight;
+    }
 
     public Sensor(int i, int s, double vel, int nv, double saturation){
         this.intersection = i;

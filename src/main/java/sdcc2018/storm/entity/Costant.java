@@ -69,8 +69,8 @@ public class Costant {
 
     // QUERY 2 Costants
     public static final int NUM_MEDIAN_15M_BOLT = 1;
-    public static final int NUM_MEDIAN_1H_BOLT  = 2;
-    public static final int NUM_MEDIAN_24H_BOLT = 4;
+    public static final int NUM_MEDIAN_1H_BOLT  = 1;
+    public static final int NUM_MEDIAN_24H_BOLT = 1;
 
     public static final int NUM_INTERMEDIATERANK15M = 5;
     public static final int NUM_INTERMEDIATERANK1H = 5;

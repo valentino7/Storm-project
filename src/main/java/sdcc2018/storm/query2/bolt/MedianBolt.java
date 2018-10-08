@@ -60,7 +60,6 @@ public class MedianBolt extends BaseWindowedBolt {
         }
         return med;
     }
-
     private IntersectionQuery2 processMed(IntersectionQuery2 oldi, IntersectionQuery2 newi){
         oldi.getTd1().add(newi.getTd1());
         return oldi;
