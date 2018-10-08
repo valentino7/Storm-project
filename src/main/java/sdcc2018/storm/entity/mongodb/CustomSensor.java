@@ -1,6 +1,6 @@
 package sdcc2018.storm.entity.mongodb;
-
-public class CustomSensor {
+import java.io.Serializable;
+public class CustomSensor implements Serializable {
     private int intersection;
     private int trafficLight;
     private double saturation;
@@ -27,7 +27,7 @@ public class CustomSensor {
         stateTrafficLight[1]=new String("OK");
         stateTrafficLight[2]=new String("OK");
     }
-
+    public CustomSensor(){}
     public int getIntersection() {
         return intersection;
     }

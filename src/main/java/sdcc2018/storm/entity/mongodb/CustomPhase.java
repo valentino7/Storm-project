@@ -2,12 +2,14 @@ package sdcc2018.storm.entity.mongodb;
 
 import sdcc2018.storm.entity.Costant;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class CustomPhase {
+public class CustomPhase implements Serializable {
     private int id;
     private int greenTime;
     private int redTime;
+
     public CustomPhase(){
     }
     public CustomPhase(int id, int greenTime, int redTime) {
