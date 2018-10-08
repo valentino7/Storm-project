@@ -10,7 +10,6 @@ import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.Sensor;
 
 public class FilterStateBolt extends BaseBasicBolt {
-//il filter bolt riceve semafori e invia incroci quando essi sono completi
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(Costant.SENSOR));
@@ -20,7 +19,7 @@ public class FilterStateBolt extends BaseBasicBolt {
     public void execute(Tuple input, BasicOutputCollector collector) {
         System.err.println(input.getValueByField(Costant.F_RECORD));
         Sensor s=(Sensor) input.getValueByField(Costant.F_RECORD);
-        if(s.isBroken()) {
+        if(s.Broken()) {
             collector.emit(new Values(s));
         }
         return;

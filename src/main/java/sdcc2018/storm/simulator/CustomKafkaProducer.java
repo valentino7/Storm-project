@@ -68,6 +68,10 @@ public class CustomKafkaProducer {
             for (int i = 0; i < list.size(); i++) {
                 for (int j = 0; j < Costant.SEM_INTERSEC; j++) {
                     CustomSensor customSensor=list.get(i).getSensorList()[j];
+                    double randomNumber=rand.nextDouble();
+                    if(randomNumber<Costant.PROB_TO_BREAK){
+                        customSensor.setLightToBroken();
+                    }
                     s = new Sensor(i, j, min + rand.nextDouble() * (max - min), ThreadLocalRandom.current().nextInt(0, 100 + 1),customSensor.getSaturation(),customSensor.getLatitude(),customSensor.getLongitude(),customSensor.getStateTrafficLight());
                     JsonNode jsonNode = objectMapper.valueToTree(s);
                     ProducerRecord<String, JsonNode> recordToSend = new ProducerRecord<>(kafka_topic, jsonNode);

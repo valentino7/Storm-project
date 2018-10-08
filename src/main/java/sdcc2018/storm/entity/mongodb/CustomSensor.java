@@ -1,4 +1,6 @@
 package sdcc2018.storm.entity.mongodb;
+import sdcc2018.storm.entity.Costant;
+
 import java.io.Serializable;
 public class CustomSensor implements Serializable {
     private int intersection;
@@ -66,6 +68,21 @@ public class CustomSensor implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+    public void setLightToBroken(){
+        if(stateTrafficLight[0].equals(Costant.OK)){
+            stateTrafficLight[0]=Costant.KO;
+            return;
+        }
+        if(stateTrafficLight[1].equals(Costant.OK)){
+            stateTrafficLight[1]=Costant.KO;
+            return;
+        }
+        if(stateTrafficLight[2].equals(Costant.OK)){
+            stateTrafficLight[2]=Costant.KO;
+            return;
+        }
+        return;
     }
     @Override
     public String toString(){

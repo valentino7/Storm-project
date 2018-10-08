@@ -105,7 +105,7 @@ public class Sensor implements Serializable {
     public String toString(){
         return "velocità "+this.speed +" num="+this.numVehicles;
     }
-    public boolean isBroken(){
+    public boolean Broken(){
         if(!stateTrafficLight[0].equals(Costant.OK)){
             return true;
         }
