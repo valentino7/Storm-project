@@ -20,7 +20,7 @@ public class FilterStateBolt extends BaseBasicBolt {
     public void execute(Tuple input, BasicOutputCollector collector) {
         System.err.println(input.getValueByField(Costant.F_RECORD));
         Sensor s=(Sensor) input.getValueByField(Costant.F_RECORD);
-        if(s.getIntersection()==1) {
+        if(s.isBroken()) {
             collector.emit(new Values(s));
         }
         return;

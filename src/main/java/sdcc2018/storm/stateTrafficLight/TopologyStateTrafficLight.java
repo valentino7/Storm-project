@@ -77,7 +77,6 @@ public class TopologyStateTrafficLight {
 
         final TopologyBuilder tp = new TopologyBuilder();
         tp.setSpout(Costant.KAFKA_SPOUT, new KafkaSpout<>(spoutConfig), Costant.NUM_SPOUT_QUERY_1);
-
         tp.setBolt(Costant.CHECK_STATE_BOLT,new FilterStateBolt(),Costant.NUM_CHECK_STATE_BOLT).shuffleGrouping(Costant.KAFKA_SPOUT);
         tp.setBolt(Costant.MONGODBSTATEBOLT,updateBoltStateSemaphore,Costant.NUM_MONGOBOLTSTATEBOLT).shuffleGrouping(Costant.CHECK_STATE_BOLT);
         return tp.createTopology();

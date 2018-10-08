@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import com.mongodb.*;
+import sdcc2018.storm.entity.mongodb.CustomSensor;
 import sdcc2018.storm.entity.mongodb.IntersectionGUI;
 
 public class CustomKafkaProducer {
@@ -43,12 +44,13 @@ public class CustomKafkaProducer {
         KafkaProducer kafkaProducer = new KafkaProducer<>(customKafkaProducer.properties);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        /*MongoClientURI connectionString = new MongoClientURI(customKafkaProducer.properties.getProperty("urlMongoDB"));
+        MongoClientURI connectionString = new MongoClientURI(customKafkaProducer.properties.getProperty("urlMongoDB"));
         MongoClient mongoClient = new MongoClient(connectionString);
         MongoDatabase database = mongoClient.getDatabase(customKafkaProducer.properties.getProperty("mongoDBName"));
-        MongoCollection<Document>coll= database.getCollection("sdccIntersection");
 
-        ArrayList<IntersectionGUI> list = new ArrayList<IntersectionGUI>();
+        while(true) {
+            MongoCollection<Document> coll = database.getCollection("sdccIntersection");
+            ArrayList<IntersectionGUI> list = new ArrayList<IntersectionGUI>();
 
             MongoCursor<Document> cursor = coll.find().iterator();
             try {
@@ -58,23 +60,22 @@ public class CustomKafkaProducer {
                 }
             } finally {
                 cursor.close();
-            }*/
-        Random rand = new Random();
-        while(true) {
+            }
+            Random rand = new Random();
             double max = 80;
             double min = 0;
             Sensor s;
-            //for (int i = 0; i < list.size(); i++) {
-            for (int i = 0; i < Costant.N_INTERSECTIONS; i++) {
-                double saturation = 0;//prendere dal db la saturazione
+            for (int i = 0; i < list.size(); i++) {
                 for (int j = 0; j < Costant.SEM_INTERSEC; j++) {
-                    s = new Sensor(i, j, min + rand.nextDouble() * (max - min), ThreadLocalRandom.current().nextInt(0, 100 + 1), saturation);
+                    CustomSensor customSensor=list.get(i).getSensorList()[j];
+                    s = new Sensor(i, j, min + rand.nextDouble() * (max - min), ThreadLocalRandom.current().nextInt(0, 100 + 1),customSensor.getSaturation(),customSensor.getLatitude(),customSensor.getLongitude(),customSensor.getStateTrafficLight());
                     JsonNode jsonNode = objectMapper.valueToTree(s);
                     ProducerRecord<String, JsonNode> recordToSend = new ProducerRecord<>(kafka_topic, jsonNode);
                     System.err.println(recordToSend);
                     kafkaProducer.send(recordToSend);
                 }
             }
+            list=null;
             System.out.println("end generation");
             try {
                 Thread.sleep(5000);

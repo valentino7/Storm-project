@@ -1,8 +1,8 @@
 package sdcc2018.storm.entity;
 
 public class Costant {
-    public static final boolean OK = true;
-    public static final boolean KO = false;
+    public static final String OK = "OK";
+    public static final String KO = "KO";
     public static final double PROB_TO_BREAK=0.5;
 
     public static final String STREAM_15M= "stream15m";
