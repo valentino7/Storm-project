@@ -49,6 +49,7 @@ public class StateSensor implements Serializable {
         for(int i=0;i<3;i++){
             if(stateTrafficLight.get(i).equals(Costant.OK)){
                 stateTrafficLight.set(i,Costant.KO);
+                return;
             }
         }
         return;

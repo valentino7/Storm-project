@@ -19,11 +19,19 @@ public class CreatorIntersection {
         InputStream is=this.getClass().getResourceAsStream("/config.properties");
         properties.load(is);
     }
+    public void removeCollections(MongoDatabase database){
+        MongoCollection<Document> coll = database.getCollection(this.properties.getProperty("collectionNameIntersection"));
+        coll.drop();
+        coll=database.getCollection(this.properties.getProperty("collectionNameStateTrafficLight"));
+        coll.drop();
+        System.err.println("collections removed");
+    }
     public static void main(String args[])throws Exception{
         CreatorIntersection creator=new CreatorIntersection();
         MongoClientURI connectionString = new MongoClientURI(creator.properties.getProperty("urlMongoDB"));
         MongoClient mongoClient = new MongoClient(connectionString);
         MongoDatabase database = mongoClient.getDatabase(creator.properties.getProperty("mongoDBName"));
+        creator.removeCollections(database);
         MongoCollection<Document> bookmarksCollection = database.getCollection(creator.properties.getProperty("collectionNameIntersection"));
         Document document;
         IntersectionGUI intersectionGUI=null;

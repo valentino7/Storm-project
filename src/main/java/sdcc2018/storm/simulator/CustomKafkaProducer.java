@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import com.mongodb.*;
 import sdcc2018.storm.entity.mongodb.CustomSensor;
 import sdcc2018.storm.entity.mongodb.IntersectionGUI;
 import sdcc2018.storm.entity.mongodb.StateSensor;
@@ -32,14 +31,6 @@ public class CustomKafkaProducer {
         properties=new Properties();
         InputStream is=this.getClass().getResourceAsStream("/config.properties");
         properties.load(is);
-    }
-    public void removeCollections(MongoDatabase database){
-        MongoCollection<Document> coll = database.getCollection(this.properties.getProperty("collectionNameIntersection"));
-        coll.drop();
-        coll=database.getCollection(this.properties.getProperty("collectionNameStateTrafficLight"));
-        coll.drop();
-        System.err.println("collections removed");
-        System.exit(0);
     }
     public static void main(String args[]) throws IOException,Exception {
         CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer();
