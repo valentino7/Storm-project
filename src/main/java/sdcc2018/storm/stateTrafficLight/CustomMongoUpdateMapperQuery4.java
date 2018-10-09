@@ -6,13 +6,16 @@ import org.bson.Document;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.Sensor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
 
 
     @Override
     public Document toDocument(ITuple tuple) {
-        Document document = new Document();
+        /*Document document = new Document();
         Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
 
         Document documentToAnnidate = new Document();
@@ -20,6 +23,26 @@ public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
             documentToAnnidate.append(""+i, s.getStateTrafficLight()[i]);
         }
         document.append("stateTrafficLight",documentToAnnidate);
+        return new Document("$set", document);*/
+        Document document = new Document();
+        Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
+        List<Document> documentList=new ArrayList<Document>();
+
+        Document trafficLight = new Document();
+        trafficLight.append("0",s.getStateTrafficLight()[0]);
+        documentList.add(trafficLight);
+        trafficLight=null;
+
+        trafficLight=new Document();
+        trafficLight.append("1",s.getStateTrafficLight()[1]);
+        documentList.add(trafficLight);
+        trafficLight=null;
+
+        trafficLight=new Document();
+        trafficLight.append("2",s.getStateTrafficLight()[0]);
+        documentList.add(trafficLight);
+
+        document.append("stateTrafficLight", documentList);
         return new Document("$set", document);
     }
 

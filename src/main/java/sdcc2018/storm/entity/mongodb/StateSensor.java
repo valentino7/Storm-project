@@ -19,6 +19,7 @@ public class StateSensor implements Serializable {
         stateTrafficLight[1]=new String("OK");
         stateTrafficLight[2]=new String("OK");
     }
+
     public int getIdIntersection() {
         return idIntersection;
     }
@@ -35,7 +36,6 @@ public class StateSensor implements Serializable {
         this.idTrafficLight = idTrafficLight;
     }
 
-
     public String[] getStateTrafficLight() {
         return stateTrafficLight;
     }
@@ -43,7 +43,6 @@ public class StateSensor implements Serializable {
     public void setStateTrafficLight(String[] stateTrafficLight) {
         this.stateTrafficLight = stateTrafficLight;
     }
-
     public void setLightToBroken() {
         if (stateTrafficLight[0].equals(Costant.OK)) {
             stateTrafficLight[0] = Costant.KO;
@@ -58,5 +57,9 @@ public class StateSensor implements Serializable {
             return;
         }
         return;
+    }
+    @Override
+    public String toString(){
+        return "idIntersection="+idIntersection+",idTrafficLight="+idTrafficLight+",stateTrafficLight="+stateTrafficLight;
     }
 }

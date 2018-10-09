@@ -24,7 +24,7 @@ public class CreatorIntersection {
         MongoClientURI connectionString = new MongoClientURI(creator.properties.getProperty("urlMongoDB"));
         MongoClient mongoClient = new MongoClient(connectionString);
         MongoDatabase database = mongoClient.getDatabase(creator.properties.getProperty("mongoDBName"));
-        MongoCollection<Document> bookmarksCollection = database.getCollection("sdccIntersection");
+        MongoCollection<Document> bookmarksCollection = database.getCollection(creator.properties.getProperty("collectionNameIntersection"));
         Document document;
         IntersectionGUI intersectionGUI=null;
         ObjectMapper objectMapper=new ObjectMapper();
@@ -44,7 +44,7 @@ public class CreatorIntersection {
             bookmarksCollection.insertOne(document);
         }
 
-        bookmarksCollection = database.getCollection("sdccStateTrafficLight");
+        bookmarksCollection = database.getCollection(creator.properties.getProperty("collectionNameStateTrafficLight"));
         for(int id2=0;id2< Costant.N_INTERSECTIONS;id2++){
             StateSensor stateSensor[]=new StateSensor[4];
             for(int j2=0;j2<4;j2++) {

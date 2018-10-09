@@ -11,7 +11,6 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.metrics.Stat;
 import org.bson.Document;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.Sensor;
@@ -34,7 +33,14 @@ public class CustomKafkaProducer {
         InputStream is=this.getClass().getResourceAsStream("/config.properties");
         properties.load(is);
     }
-
+    public void removeCollections(MongoDatabase database){
+        MongoCollection<Document> coll = database.getCollection(this.properties.getProperty("collectionNameIntersection"));
+        coll.drop();
+        coll=database.getCollection(this.properties.getProperty("collectionNameStateTrafficLight"));
+        coll.drop();
+        System.err.println("collections removed");
+        System.exit(0);
+    }
     public static void main(String args[]) throws IOException,Exception {
         CustomKafkaProducer customKafkaProducer = new CustomKafkaProducer();
         String kafka_brokers=customKafkaProducer.properties.getProperty("kafka.brokerurl");
@@ -50,8 +56,10 @@ public class CustomKafkaProducer {
         MongoClient mongoClient = new MongoClient(connectionString);
         MongoDatabase database = mongoClient.getDatabase(customKafkaProducer.properties.getProperty("mongoDBName"));
 
+        //customKafkaProducer.removeCollections(database);
+
         while(true) {
-            MongoCollection<Document> coll = database.getCollection("sdccIntersection");
+            MongoCollection<Document> coll = database.getCollection(customKafkaProducer.properties.getProperty("collectionNameIntersection"));
             ArrayList<IntersectionGUI> list = new ArrayList<IntersectionGUI>();
             ArrayList<StateSensor> listSensor = new ArrayList<StateSensor>();
             MongoCursor<Document> cursor = coll.find().iterator();
@@ -63,13 +71,14 @@ public class CustomKafkaProducer {
             } finally {
                 cursor.close();
             }
-            coll = database.getCollection("sdccStateTrafficLight");
+            coll = database.getCollection(customKafkaProducer.properties.getProperty("collectionNameStateTrafficLight"));
             listSensor = new ArrayList<StateSensor>();
 
             cursor = coll.find().iterator();
             try {
                 while (cursor.hasNext()) {
                     JsonNode rootNode = objectMapper.readTree(cursor.next().toJson());
+                    StateSensor st=(StateSensor)objectMapper.treeToValue(rootNode,StateSensor.class);
                     listSensor.add(objectMapper.treeToValue(rootNode,StateSensor.class));
                 }
             } finally {

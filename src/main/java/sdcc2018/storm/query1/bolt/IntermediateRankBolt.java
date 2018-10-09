@@ -27,7 +27,7 @@ public class IntermediateRankBolt extends BaseBasicBolt {
         Collections.sort(list,new IntersectionQuery1());
         List<IntersectionQuery1> list2 = null;
         if(list.size() > Costant.TOP_K) {
-            list2 = new ArrayList<>(list.subList(0, Costant.TOP_K - 1));
+            list2 = new ArrayList<>(list.subList(0, Costant.TOP_K));
             collector.emit(new Values(list2));
         }else {
             collector.emit(new Values(list));

@@ -3,7 +3,7 @@ package sdcc2018.storm.entity;
 public class Costant {
     public static final String OK = "OK";
     public static final String KO = "KO";
-    public static final double PROB_TO_BREAK=0.2;
+    public static final double PROB_TO_BREAK=0.5;
 
     public static final String STREAM_15M= "stream15m";
     public static final String STREAM_1H= "stream1h";
@@ -12,7 +12,7 @@ public class Costant {
     public static final String CHECK_STATE_BOLT ="check_state_bolt" ;
     public static final int NUM_CHECK_STATE_BOLT = 1;
     public static final int NUM_MONGOBOLTSTATEBOLT = 1;
-    public static final int TOP_K = 11;
+    public static final int TOP_K = 10;
     public static final String INTERMEDIATERANK_15M = "intermediate15M" ;
     public static final String INTERMEDIATERANK_1H = "intermediate1H" ;
     public static final String INTERMEDIATERANK_24H = "intermediate24H" ;
