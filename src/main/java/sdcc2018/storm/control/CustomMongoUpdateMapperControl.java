@@ -23,7 +23,7 @@ public class CustomMongoUpdateMapperControl implements MongoMapper {
         for ( Phase i : intersectionControl.getPhases()){
             Document phase = new Document();
             phase.append( "id", i.getId());
-            phase.append( "greeTime",i.getGreen());
+            phase.append( "greenTime",i.getGreen());
             phase.append( "redTime", i.getRed());
             documentList.add(phase);
             //j++;

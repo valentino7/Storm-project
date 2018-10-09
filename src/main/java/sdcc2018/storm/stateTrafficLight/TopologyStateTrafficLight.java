@@ -1,11 +1,11 @@
 package sdcc2018.storm.stateTrafficLight;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.mongodb.bolt.MongoUpdateBolt;
 import org.apache.storm.mongodb.common.QueryFilterCreator;
-import org.apache.storm.mongodb.common.SimpleQueryFilterCreator;
 import org.apache.storm.mongodb.common.mapper.MongoMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import sdcc2018.storm.entity.Costant;
@@ -21,11 +21,12 @@ import org.apache.storm.kafka.spout.KafkaSpoutRetryService;
 import org.apache.storm.topology.TopologyBuilder;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
 import static org.apache.storm.kafka.spout.KafkaSpoutConfig.FirstPollOffsetStrategy.LATEST;
 
-public class TopologyStateTrafficLight {
+public class TopologyStateTrafficLight implements Serializable {
     private Properties properties;
     public TopologyStateTrafficLight()throws Exception{
         properties=new Properties();
@@ -66,9 +67,10 @@ public class TopologyStateTrafficLight {
          String urlMongoDB=properties.getProperty("urlMongoDB");
          String collectionName= properties.getProperty("collectionNameStateTrafficLight");
          MongoMapper mapperUpdate = new CustomMongoUpdateMapperQuery4()
-                 .withFields(Costant.ID);
+                 .withFields(Costant.ID_INTERSECTION, Costant.ID_SENSOR);
 
-         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.SENSOR);
+         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID_INTERSECTION);
+
 
          MongoUpdateBolt updateBoltStateSemaphore = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
 

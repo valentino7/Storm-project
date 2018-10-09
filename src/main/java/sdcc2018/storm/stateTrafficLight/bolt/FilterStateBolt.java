@@ -12,15 +12,15 @@ import sdcc2018.storm.entity.Sensor;
 public class FilterStateBolt extends BaseBasicBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(Costant.SENSOR));
+        declarer.declare(new Fields(Costant.ID_INTERSECTION,Costant.ID_SENSOR,Costant.SENSOR));
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        System.err.println(input.getValueByField(Costant.F_RECORD));
+        //System.err.println(input.getValueByField(Costant.F_RECORD));
         Sensor s=(Sensor) input.getValueByField(Costant.F_RECORD);
         if(s.Broken()) {
-            collector.emit(new Values(s));
+            collector.emit(new Values(s.getIntersection(),s.getTrafficLight(),s));
         }
         return;
     }

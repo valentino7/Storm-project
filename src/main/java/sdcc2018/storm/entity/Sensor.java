@@ -23,7 +23,7 @@ public class Sensor implements Serializable {
         this.numVehicles = nv;
         this.saturation=saturation;
     }
-    public Sensor(int i, int s, double vel, int nv,double saturation,double latitude,double longitude,String[]stateTrafficLight){
+    public Sensor(int i, int s, double vel, int nv,double saturation,double latitude,double longitude,String[] stateTrafficLight){
         this.intersection = i;
         this.trafficLight = s;
         this.speed = vel;

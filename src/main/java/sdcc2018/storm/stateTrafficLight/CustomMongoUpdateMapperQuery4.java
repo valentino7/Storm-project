@@ -8,22 +8,22 @@ import sdcc2018.storm.entity.Sensor;
 
 
 public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
-    private String[] fields;
+
 
     @Override
     public Document toDocument(ITuple tuple) {
         Document document = new Document();
         Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
-        System.out.println(s);
-        document.append( "id" ,s.getIntersection());
+
         Document documentToAnnidate = new Document();
-        documentToAnnidate.append("semaforo:", s.getTrafficLight());
-        document.append("test",documentToAnnidate);
+        for ( int i = 0 ; i < s.getStateTrafficLight().length ; i++){
+            documentToAnnidate.append(""+i, s.getStateTrafficLight()[i]);
+        }
+        document.append("stateTrafficLight",documentToAnnidate);
         return new Document("$set", document);
     }
 
     public CustomMongoUpdateMapperQuery4 withFields(String... fields) {
-        this.fields = fields;
         return this;
     }
 }

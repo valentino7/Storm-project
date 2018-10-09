@@ -46,6 +46,7 @@ public class Costant {
     public static final int NUM_MONGOBOLT24H = 1;
     public static final String QUERY1 = "query1";
     public static final String ID_INTERSECTION = "idIntersection";
+    public static final String ID_SENSOR = "idTrafficLight";
 
     public static int N_INTERSECTIONS = 50;
     public static int YELLOW_TIME = 4;
