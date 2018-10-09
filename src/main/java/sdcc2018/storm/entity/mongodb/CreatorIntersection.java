@@ -43,6 +43,18 @@ public class CreatorIntersection {
             document = Document.parse(jsonNode.toString() );
             bookmarksCollection.insertOne(document);
         }
+
+        bookmarksCollection = database.getCollection("sdccStateTrafficLight");
+        for(int id2=0;id2< Costant.N_INTERSECTIONS;id2++){
+            StateSensor stateSensor[]=new StateSensor[4];
+            for(int j2=0;j2<4;j2++) {
+                stateSensor[j2] = new StateSensor(id2, j2);
+                JsonNode jsonNode = objectMapper.valueToTree(stateSensor[j2]);
+                System.out.println(jsonNode);
+                document = Document.parse(jsonNode.toString());
+                bookmarksCollection.insertOne(document);
+            }
+        }
         return;
     }
 }

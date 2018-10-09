@@ -20,8 +20,8 @@ public class CustomPhase implements Serializable {
     public static CustomPhase[] randomPhase(){
         CustomPhase customPhase[]=new CustomPhase[2];
         Random rand=new Random();
-        double greenTimeRandom=rand.nextDouble()*Costant.CYCLE_TIME;
-        double redTimeRandom=Costant.CYCLE_TIME-greenTimeRandom;
+        double greenTimeRandom=rand.nextDouble()*(Costant.CYCLE_TIME-Costant.CHANGE_TIME);
+        double redTimeRandom=Costant.CYCLE_TIME-Costant.CHANGE_TIME-greenTimeRandom;
         customPhase[0]=new CustomPhase();
         customPhase[0].setId(0);
         customPhase[0].setGreenTime((int)greenTimeRandom);

@@ -8,17 +8,16 @@ public class CustomSensor implements Serializable {
     private double saturation;
     private double latitude;
     private double longitude;
-    private String stateTrafficLight[];
+    //private String stateTrafficLight[];
 
-    public String[] getStateTrafficLight() {
+    /*public String[] getStateTrafficLight() {
         return stateTrafficLight;
     }
 
     public void setStateTrafficLight(String[] stateTrafficLight) {
         this.stateTrafficLight = stateTrafficLight;
     }
-
-    public CustomSensor(int intersection, int trafficLight, double saturation, double latitude, double longitude) {
+     public CustomSensor(int intersection, int trafficLight, double saturation, double latitude, double longitude) {
         this.intersection = intersection;
         this.trafficLight = trafficLight;
         this.saturation = saturation;
@@ -28,6 +27,14 @@ public class CustomSensor implements Serializable {
         stateTrafficLight[0]=new String("OK");
         stateTrafficLight[1]=new String("OK");
         stateTrafficLight[2]=new String("OK");
+    }*/
+    public CustomSensor(int intersection, int trafficLight, double saturation, double latitude, double longitude) {
+        this.intersection = intersection;
+        this.trafficLight = trafficLight;
+        this.saturation = saturation;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
     }
     public CustomSensor(){}
     public int getIntersection() {
@@ -69,7 +76,7 @@ public class CustomSensor implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-    public void setLightToBroken(){
+    /*public void setLightToBroken(){
         if(stateTrafficLight[0].equals(Costant.OK)){
             stateTrafficLight[0]=Costant.KO;
             return;
@@ -83,9 +90,9 @@ public class CustomSensor implements Serializable {
             return;
         }
         return;
-    }
-    @Override
+    }*/
+    /*@Override
     public String toString(){
         return "id="+intersection+",idsem="+trafficLight+",saturation="+saturation+",latitude="+latitude+",longitude="+longitude+",light1="+stateTrafficLight[0]+",light2="+stateTrafficLight[1]+",light3="+stateTrafficLight[2];
-    }
+    }*/
 }

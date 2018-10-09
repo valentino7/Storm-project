@@ -11,6 +11,7 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.metrics.Stat;
 import org.bson.Document;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.Sensor;
@@ -24,6 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.mongodb.*;
 import sdcc2018.storm.entity.mongodb.CustomSensor;
 import sdcc2018.storm.entity.mongodb.IntersectionGUI;
+import sdcc2018.storm.entity.mongodb.StateSensor;
 
 public class CustomKafkaProducer {
     private Properties properties;
@@ -49,9 +51,9 @@ public class CustomKafkaProducer {
         MongoDatabase database = mongoClient.getDatabase(customKafkaProducer.properties.getProperty("mongoDBName"));
 
         while(true) {
-            MongoCollection<Document> coll = database.getCollection("sdccIntersection");
+            MongoCollection<Document> coll = database.getCollection("sdccIntersection2");
             ArrayList<IntersectionGUI> list = new ArrayList<IntersectionGUI>();
-
+            ArrayList<StateSensor> listSensor = new ArrayList<StateSensor>();
             MongoCursor<Document> cursor = coll.find().iterator();
             try {
                 while (cursor.hasNext()) {
@@ -61,6 +63,19 @@ public class CustomKafkaProducer {
             } finally {
                 cursor.close();
             }
+            coll = database.getCollection("sdccStateTrafficLight");
+            listSensor = new ArrayList<StateSensor>();
+
+            cursor = coll.find().iterator();
+            try {
+                while (cursor.hasNext()) {
+                    JsonNode rootNode = objectMapper.readTree(cursor.next().toJson());
+                    listSensor.add(objectMapper.treeToValue(rootNode,StateSensor.class));
+                }
+            } finally {
+                cursor.close();
+            }
+
             Random rand = new Random();
             double max = 80;
             double min = 0;
@@ -68,11 +83,12 @@ public class CustomKafkaProducer {
             for (int i = 0; i < list.size(); i++) {
                 for (int j = 0; j < Costant.SEM_INTERSEC; j++) {
                     CustomSensor customSensor=list.get(i).getSensorList()[j];
+                    StateSensor stateSensor = listSensor.get(4*i+j);
                     double randomNumber=rand.nextDouble();
                     if(randomNumber<Costant.PROB_TO_BREAK){
-                        customSensor.setLightToBroken();
+                        stateSensor.setLightToBroken();
                     }
-                    s = new Sensor(i, j, min + rand.nextDouble() * (max - min), ThreadLocalRandom.current().nextInt(0, 100 + 1),customSensor.getSaturation(),customSensor.getLatitude(),customSensor.getLongitude(),customSensor.getStateTrafficLight());
+                    s = new Sensor(i, j, min + rand.nextDouble() * (max - min), ThreadLocalRandom.current().nextInt(0, 100 + 1),customSensor.getSaturation(),customSensor.getLatitude(),customSensor.getLongitude(),stateSensor.getStateTrafficLight());
                     JsonNode jsonNode = objectMapper.valueToTree(s);
                     ProducerRecord<String, JsonNode> recordToSend = new ProducerRecord<>(kafka_topic, jsonNode);
                     System.err.println(recordToSend);
@@ -80,6 +96,7 @@ public class CustomKafkaProducer {
                 }
             }
             list=null;
+            listSensor=null;
             System.out.println("end generation");
             try {
                 Thread.sleep(5000);
