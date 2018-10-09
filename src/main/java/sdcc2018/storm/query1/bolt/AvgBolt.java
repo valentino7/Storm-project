@@ -40,7 +40,7 @@ public class AvgBolt extends BaseWindowedBolt {
         for ( Tuple t : tupleList){
             IntersectionQuery1 l = (IntersectionQuery1) t.getValueByField(Costant.INTERSECTION);
             if(mappa.containsKey(l.getId())){//se la mappa contiene l'incrocio
-                mappa.put(l.getId(), processAvg(mappa.get(l.getId()),l));//aggiorna la media
+                mappa.replace(l.getId(), processAvg(mappa.get(l.getId()),l));//aggiorna la media
             }
             else{//la mappa non contiene l'incrocio,aggiungi nella mappa l'incrocio
                 mappa.put(l.getId(),l);

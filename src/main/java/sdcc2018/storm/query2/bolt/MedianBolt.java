@@ -39,7 +39,7 @@ public class MedianBolt extends BaseWindowedBolt {
         for ( Tuple t : tupleList){
             IntersectionQuery2 l = (IntersectionQuery2) t.getValueByField(Costant.INTERSECTION);
             if(mappa.containsKey(l.getId())){
-                mappa.put(l.getId(), processMed(mappa.get(l.getId()),l));
+                mappa.replace(l.getId(), processMed(mappa.get(l.getId()),l));
             }
             else{
                 mappa.put(l.getId(),l);

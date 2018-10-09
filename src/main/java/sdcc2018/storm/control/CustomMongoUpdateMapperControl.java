@@ -5,7 +5,9 @@ import org.apache.storm.tuple.ITuple;
 import org.bson.Document;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.IntersectionControl;
+import sdcc2018.storm.entity.Phase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,16 +16,19 @@ public class CustomMongoUpdateMapperControl implements MongoMapper {
     @Override
     public Document toDocument(ITuple tuple) {
         Document document = new Document();
-        List<IntersectionControl> listToSave= (List<IntersectionControl>) tuple.getValueByField(Costant.PHASE);
-        int j= 0;
-        document.append(Costant.PHASE,"test");
-        for ( IntersectionControl i : listToSave){
-            Document documentToAnnidate = new Document();
-            documentToAnnidate.append( "fase1-verde", i.getPhases().get(0).getGreen());
-            documentToAnnidate.append( "fase2-verde", i.getPhases().get(1).getGreen());
-            document.append( ""+j , documentToAnnidate);
-            j++;
+        IntersectionControl intersectionControl = (IntersectionControl) tuple.getValueByField(Costant.PHASE);
+       // int j= 0;
+        System.err.println(intersectionControl.getId());
+        List<Document> documentList = new ArrayList<>();
+        for ( Phase i : intersectionControl.getPhases()){
+            Document phase = new Document();
+            phase.append( "id", i.getId());
+            phase.append( "greeTime",i.getGreen());
+            phase.append( "redTime", i.getRed());
+            documentList.add(phase);
+            //j++;
         }
+        document.append("listPhase",documentList);
         return new Document("$set", document);
     }
 

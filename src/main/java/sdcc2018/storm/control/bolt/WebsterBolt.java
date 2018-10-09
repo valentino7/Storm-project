@@ -19,9 +19,9 @@ public class WebsterBolt extends BaseBasicBolt {
     private void webster(IntersectionControl i){
         List<Sensor> list_s=i.getL();
         // ordinare lista list_s;
-        Phase p1 = new Phase(2);
+        Phase p1 = new Phase(1);
         p1.setRatioFlowSaturation(  calculateMax(list_s,0,2) );
-        Phase p2 = new Phase(1);
+        Phase p2 = new Phase(0);
         p2.setRatioFlowSaturation( calculateMax(list_s,1,3) );
 
         p1.setEffective_green(calculateEffectiveGreen(p1.getRatioFlowSaturation(),p2.getRatioFlowSaturation()));
@@ -33,8 +33,8 @@ public class WebsterBolt extends BaseBasicBolt {
         p1.setGreen(calculateGreen(p1.getEffective_green()));
         p2.setGreen(calculateGreen(p2.getEffective_green()));
 
-        System.out.println(p1.getEffective_green());
-        System.out.println(p2.getEffective_green());
+        //System.out.println(p1.getEffective_green());
+        //System.out.println(p2.getEffective_green());
 
         p1.setRed(calculateRed(p1.getGreen()));
         p2.setRed(calculateRed(p2.getGreen()));
@@ -68,13 +68,15 @@ public class WebsterBolt extends BaseBasicBolt {
         ArrayList<IntersectionControl> listToEmit =(ArrayList<IntersectionControl>)input.getValueByField(Costant.MAP_INTERSECTION);
         for(IntersectionControl i: listToEmit){
             webster(i);
-            System.err.println(i);
+            collector.emit(new Values(i.getId(), i));
+
         }
+        //System.err.println(listToEmit);
         //collector.emit(new Values(listToEmit));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields( Costant.PHASE ));
+        declarer.declare(new Fields(Costant.ID_INTERSECTION, Costant.PHASE ));
     }
 }

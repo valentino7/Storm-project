@@ -70,7 +70,7 @@ public class TopologyGreeenDuration {
          MongoMapper mapperUpdate = new CustomMongoUpdateMapperControl()
                  .withFields(Costant.PHASE);
 
-         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.PHASE);
+         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID_INTERSECTION);
 
          MongoUpdateBolt mongoDBWebster = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
 
@@ -81,7 +81,7 @@ public class TopologyGreeenDuration {
         tp.setSpout(Costant.KAFKA_SPOUT, new KafkaSpout<>(spoutConfig), Costant.NUM_SPOUT_QUERY_2);
          tp.setBolt(Costant.FILTER_CONTROL, new FilterControlBolt(), Costant.NUM_FILTER_CONTROL).shuffleGrouping(Costant.KAFKA_SPOUT);
          tp.setBolt(Costant.SUM_BOLT, new SumBolt().withTumblingWindow(Duration.seconds(20)), Costant.NUM_SUM_BOLT)
-                 .fieldsGrouping(Costant.FILTER_CONTROL, new Fields(Costant.ID));
+                 .fieldsGrouping(Costant.FILTER_CONTROL, new Fields(Costant.ID_INTERSECTION));
          tp.setBolt(Costant.WEBSTER_BOLT, new WebsterBolt(), Costant.NUM_WEBSTER_BOLT)
                  .shuffleGrouping(Costant.SUM_BOLT);
         tp.setBolt(Costant.MONGODBWEBSTER,mongoDBWebster,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.WEBSTER_BOLT);

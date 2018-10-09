@@ -23,7 +23,7 @@ public class CustomMongoUpdateMapperQuery1 implements MongoMapper {
             documentToAnnidate.append( "classifica", j+1 );
             documentToAnnidate.append( "id", intersection.getId());
             documentToAnnidate.append( "velocitaMedia", intersection.getVelocitaMedia() );
-            document.append( "valore "+ (j+1) , documentToAnnidate);
+            document.append( ""+ (j+1) , documentToAnnidate);
         }
         return new Document("$set", document);
     }

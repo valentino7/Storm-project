@@ -52,6 +52,6 @@ public class FilterControlBolt extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(Costant.ID,Costant.INTERSECTION));
+        declarer.declare(new Fields(Costant.ID_INTERSECTION,Costant.INTERSECTION));
     }
 }

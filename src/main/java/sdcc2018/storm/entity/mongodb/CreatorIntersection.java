@@ -31,7 +31,7 @@ public class CreatorIntersection {
         for(int id=0;id< Costant.N_INTERSECTIONS;id++){
             CustomSensor customSensor[]=new CustomSensor[4];
             for(int j=0;j<4;j++){
-                double saturation=0;
+                double saturation=7000;
                 double latitude=1;
                 double longitude=2;
                 customSensor[j]=new CustomSensor(id,j,saturation,latitude,longitude);

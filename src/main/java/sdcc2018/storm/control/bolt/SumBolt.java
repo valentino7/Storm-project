@@ -40,7 +40,7 @@ public class SumBolt extends BaseWindowedBolt{
         for ( Tuple t : tupleList){
             IntersectionControl l = (IntersectionControl) t.getValueByField(Costant.INTERSECTION);
             if(map.containsKey(l.getId())){
-                map.put(l.getId(), sumVehicles(map.get(l.getId()),l));
+                map.replace(l.getId(), sumVehicles(map.get(l.getId()),l));
             }
             else{
                 map.put(l.getId(),l);
@@ -57,17 +57,19 @@ public class SumBolt extends BaseWindowedBolt{
         for (int i = 0; i < Costant.SEM_INTERSEC; i++) {
             sOld.get(i).setNumVehicles(sNew.get(i).getNumVehicles() + sOld.get(i).getNumVehicles());
         }
-        //oldi non viene modificato
+        oldi.setL(sOld);
         return oldi;
     }
 
     private List<IntersectionControl> createList(HashMap<Integer,IntersectionControl> mappa){
         //verifica che da mappa trasforma in lista
+        //System.err.println(mappa);
         List<IntersectionControl> list = new ArrayList<>();
         for (IntersectionControl i : mappa.values()) {
             list.add(i);
             mappa.remove(i);
         }
+        //System.err.println(list);
         return list;
     }
 
