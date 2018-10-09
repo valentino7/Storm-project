@@ -43,7 +43,7 @@ public class GlobalRankBolt extends BaseBasicBolt {
         }
         if(countIntermediateRank >= repNum) {
             collector.emit(new Values(this.AvgType,globalRanking));
-            System.out.println(this.AvgType + "    " + globalRanking);
+            System.out.println(this.AvgType + "    "+  globalRanking.size() +"    "+ globalRanking);
             globalRanking = null;
             globalRanking = new ArrayList<>();
             countIntermediateRank = 0;

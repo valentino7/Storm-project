@@ -51,7 +51,7 @@ public class CustomKafkaProducer {
         MongoDatabase database = mongoClient.getDatabase(customKafkaProducer.properties.getProperty("mongoDBName"));
 
         while(true) {
-            MongoCollection<Document> coll = database.getCollection("sdccIntersection2");
+            MongoCollection<Document> coll = database.getCollection("sdccIntersection");
             ArrayList<IntersectionGUI> list = new ArrayList<IntersectionGUI>();
             ArrayList<StateSensor> listSensor = new ArrayList<StateSensor>();
             MongoCursor<Document> cursor = coll.find().iterator();
