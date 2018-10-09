@@ -1,5 +1,6 @@
 package sdcc2018.storm.stateTrafficLight;
 
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.storm.mongodb.common.mapper.MongoMapper;
 import org.apache.storm.tuple.ITuple;
 import org.bson.Document;
@@ -15,16 +16,20 @@ public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
 
     @Override
     public Document toDocument(ITuple tuple) {
-        /*Document document = new Document();
-        Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
 
-        Document documentToAnnidate = new Document();
-        for ( int i = 0 ; i < s.getStateTrafficLight().length ; i++){
-            documentToAnnidate.append(""+i, s.getStateTrafficLight()[i]);
-        }
-        document.append("stateTrafficLight",documentToAnnidate);
-        return new Document("$set", document);*/
         Document document = new Document();
+        Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
+        List<String> list = new ArrayList<>();
+        Document documentToAnnidate = new Document();
+        for ( int i = 0 ; i < s.getStateTrafficLight().size() ; i++){
+            list.add(s.getStateTrafficLight().get(i));
+        }
+        document.append("stateTrafficLight",list);
+        return new Document("$set", document);
+
+
+
+        /*Document document = new Document();
         Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
         List<Document> documentList=new ArrayList<Document>();
 
@@ -43,7 +48,7 @@ public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
         documentList.add(trafficLight);
 
         document.append("stateTrafficLight", documentList);
-        return new Document("$set", document);
+        return new Document("$set", document);*/
     }
 
     public CustomMongoUpdateMapperQuery4 withFields(String... fields) {

@@ -2,6 +2,7 @@ package sdcc2018.storm.entity;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Sensor implements Serializable {
 
@@ -12,7 +13,7 @@ public class Sensor implements Serializable {
     private double saturation;//saturazione
     private double latitude;
     private double longitude;
-    private String stateTrafficLight[];
+    private List<String> stateTrafficLight;
 
     public Sensor(){
     }
@@ -23,7 +24,7 @@ public class Sensor implements Serializable {
         this.numVehicles = nv;
         this.saturation=saturation;
     }
-    public Sensor(int i, int s, double vel, int nv,double saturation,double latitude,double longitude,String[] stateTrafficLight){
+    public Sensor(int i, int s, double vel, int nv, double saturation, double latitude, double longitude, List<String> stateTrafficLight){
         this.intersection = i;
         this.trafficLight = s;
         this.speed = vel;
@@ -31,10 +32,8 @@ public class Sensor implements Serializable {
         this.saturation=saturation;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.stateTrafficLight=new String[3];
-        this.stateTrafficLight[0]=stateTrafficLight[0];
-        this.stateTrafficLight[1]=stateTrafficLight[1];
-        this.stateTrafficLight[2]=stateTrafficLight[2];
+        this.stateTrafficLight= stateTrafficLight;
+
     }
 
     public int getIntersection() {
@@ -93,11 +92,11 @@ public class Sensor implements Serializable {
         this.longitude = longitude;
     }
 
-    public String[] getStateTrafficLight() {
+    public List<String> getStateTrafficLight() {
         return stateTrafficLight;
     }
 
-    public void setStateTrafficLight(String[] stateTrafficLight) {
+    public void setStateTrafficLight(List<String> stateTrafficLight) {
         this.stateTrafficLight = stateTrafficLight;
     }
 
@@ -105,14 +104,16 @@ public class Sensor implements Serializable {
     public String toString(){
         return "velocità "+this.speed +" num="+this.numVehicles;
     }
+
+
     public boolean Broken(){
-        if(!stateTrafficLight[0].equals(Costant.OK)){
+        if(!stateTrafficLight.get(0).equals(Costant.OK)){
             return true;
         }
-        if(!stateTrafficLight[1].equals(Costant.OK)){
+        if(!stateTrafficLight.get(1).equals(Costant.OK)){
             return true;
         }
-        if(!stateTrafficLight[2].equals(Costant.OK)){
+        if(!stateTrafficLight.get(2).equals(Costant.OK)){
             return true;
         }
         return false;
