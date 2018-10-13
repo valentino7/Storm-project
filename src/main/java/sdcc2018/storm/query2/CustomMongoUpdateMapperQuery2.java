@@ -17,9 +17,11 @@ public class CustomMongoUpdateMapperQuery2 implements MongoMapper {
         Document document = new Document();
         String id = (String) tuple.getValueByField(Costant.ID_WINDOW);
         Double globalMedian = (Double) tuple.getValueByField(Costant.MEDIAN);
+        List<IntersectionQuery2> listToSave= (List<IntersectionQuery2>) tuple.getValueByField(Costant.LIST_INTERSECTION);
+        Integer listSize=(Integer) listToSave.size();
         document.append( Costant.ID_WINDOW , id  );
         document.append( "globalMedian" , globalMedian  );
-        List<IntersectionQuery2> listToSave= (List<IntersectionQuery2>) tuple.getValueByField(Costant.LIST_INTERSECTION);
+        document.append("listSize",listSize);
         List<Document> list = new ArrayList<>();
         for ( IntersectionQuery2 intersection : listToSave){
             Document documentToAnnidate = new Document();

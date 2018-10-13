@@ -12,6 +12,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GlobalMedianBolt extends BaseBasicBolt {
@@ -48,6 +49,7 @@ public class GlobalMedianBolt extends BaseBasicBolt {
                     listMax.add(i);
                 }
             }
+            Collections.sort(listMax,new IntersectionQuery2());
             collector.emit(new Values(this.MedianType,listMax, quantil ));
             System.out.println(this.MedianType +"   " + quantil + "   "+listMax.size());
             countMedian = 0;
