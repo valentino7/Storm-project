@@ -28,7 +28,7 @@ public class GlobalMedianBolt extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(Costant.ID, Costant.LIST_INTERSECTION,Costant.MEDIAN));
+        declarer.declare(new Fields(Costant.ID_WINDOW, Costant.LIST_INTERSECTION,Costant.MEDIAN));
     }
 
     @Override

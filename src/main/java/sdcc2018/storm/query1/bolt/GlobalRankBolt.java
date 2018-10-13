@@ -28,7 +28,7 @@ public class GlobalRankBolt extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(Costant.ID,Costant.RANK_TOPK));
+        declarer.declare(new Fields(Costant.ID_WINDOW,Costant.RANK_TOPK));
     }
 
 

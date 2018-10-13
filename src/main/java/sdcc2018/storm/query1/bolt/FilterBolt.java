@@ -22,9 +22,9 @@ public class FilterBolt extends BaseBasicBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(Costant.ID,Costant.INTERSECTION));
-        declarer.declareStream(Costant.STREAM_15M,new Fields(Costant.ID,Costant.INTERSECTION));
-        declarer.declareStream(Costant.STREAM_1H,new Fields(Costant.ID,Costant.INTERSECTION));
-        declarer.declareStream(Costant.STREAM_24H,new Fields(Costant.ID,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_15M,new Fields(Costant.ID_WINDOW,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_1H,new Fields(Costant.ID_WINDOW,Costant.INTERSECTION));
+        declarer.declareStream(Costant.STREAM_24H,new Fields(Costant.ID_WINDOW,Costant.INTERSECTION));
     }
 
 

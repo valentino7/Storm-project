@@ -65,9 +65,9 @@ public class Topology1 {
          String urlMongoDB=properties.getProperty("urlMongoDB");
          String collectionName= properties.getProperty("collectionNameRank");
          MongoMapper mapperUpdate = new CustomMongoUpdateMapperQuery1()
-                 .withFields(Costant.ID, Costant.RANK_TOPK);
+                 .withFields(Costant.ID_WINDOW, Costant.RANK_TOPK);
 
-         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID);
+         QueryFilterCreator updateQueryCreator = new SimpleQueryFilterCreator().withField(Costant.ID_WINDOW);
 
          MongoUpdateBolt updateBolt15M = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
          MongoUpdateBolt updateBolt1H = new MongoUpdateBolt(urlMongoDB, collectionName, updateQueryCreator, mapperUpdate);
@@ -82,12 +82,12 @@ public class Topology1 {
         tp.setBolt(Costant.FILTER_QUERY_1,new FilterBolt(),Costant.NUM_FILTER_QUERY1).shuffleGrouping(Costant.KAFKA_SPOUT);
 
         tp.setBolt(Costant.AVG15M_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(10)),Costant.NUM_AVG15M)
-                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_15M, new Fields(Costant.ID));
+                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_15M, new Fields(Costant.ID_WINDOW));
         tp.setBolt(Costant.AVG1H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(20)),Costant.NUM_AVG1H)
-                .fieldsGrouping(Costant.FILTER_QUERY_1, Costant.STREAM_1H,new Fields(Costant.ID));
+                .fieldsGrouping(Costant.FILTER_QUERY_1, Costant.STREAM_1H,new Fields(Costant.ID_WINDOW));
 
         tp.setBolt(Costant.AVG24H_BOLT, new AvgBolt().withTumblingWindow(Duration.seconds(40)),Costant.NUM_AVG24H)
-                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_24H,new Fields(Costant.ID));
+                .fieldsGrouping(Costant.FILTER_QUERY_1,Costant.STREAM_24H,new Fields(Costant.ID_WINDOW));
 
         tp.setBolt(Costant.INTERMEDIATERANK_15M, new IntermediateRankBolt(), Costant.NUM_INTERMEDIATERANK15M)
                 .shuffleGrouping(Costant.AVG15M_BOLT);
