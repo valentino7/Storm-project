@@ -38,7 +38,7 @@ public class TopologyGreeenDuration {
         new TopologyGreeenDuration().runMain(args);
     }
 
-    protected void runMain(String[] args) throws Exception {
+    public void runMain(String[] args) throws Exception {
         Config conf=this.getConfig();
         if (args != null && args.length > 0) {
             System.out.println("argument1=" + args[0]);
