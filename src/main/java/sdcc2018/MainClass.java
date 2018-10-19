@@ -1,4 +1,4 @@
-package sdcc2018.storm;
+package sdcc2018;
 
 import sdcc2018.storm.control.TopologyGreeenDuration;
 import sdcc2018.storm.query1.Topology1;

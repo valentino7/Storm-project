@@ -42,7 +42,7 @@ public class Topology2 {
         Config conf=this.getConfig();
         if (args != null && args.length > 0) {
             System.out.println("argument1=" + args[0]);
-            conf.setNumWorkers(3);
+            conf.setNumWorkers(2);
             StormSubmitter.submitTopologyWithProgressBar(properties.getProperty("topologyName2"), conf, this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
         } else {
             System.out.println("Create local cluster");
@@ -86,15 +86,14 @@ public class Topology2 {
 
          tp.setBolt(Costant.FILTER_QUERY_2, new FilterMedianBolt(), Costant.NUM_FILTER_QUERY2).shuffleGrouping(Costant.KAFKA_SPOUT);
 
-         tp.setBolt(Costant.MEDIAN15M_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(10)), Costant.NUM_MEDIAN_15M_BOLT)
+         tp.setBolt(Costant.MEDIAN15M_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(5)), Costant.NUM_MEDIAN_15M_BOLT)
                  .fieldsGrouping(Costant.FILTER_QUERY_2,Costant.STREAM_15M, new Fields(Costant.ID_WINDOW));
 
-         tp.setBolt(Costant.MEDIAN1H_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(20)), Costant.NUM_MEDIAN_1H_BOLT)
+         tp.setBolt(Costant.MEDIAN1H_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(5)), Costant.NUM_MEDIAN_1H_BOLT)
                  .fieldsGrouping(Costant.FILTER_QUERY_2,Costant.STREAM_1H, new Fields(Costant.ID_WINDOW));
 
-         tp.setBolt(Costant.MEDIAN24H_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(40)), Costant.NUM_MEDIAN_24H_BOLT)
+         tp.setBolt(Costant.MEDIAN24H_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(5)), Costant.NUM_MEDIAN_24H_BOLT)
                  .fieldsGrouping(Costant.FILTER_QUERY_2,Costant.STREAM_24H, new Fields(Costant.ID_WINDOW));
-
          tp.setBolt(Costant.GLOBAL15M_MEDIAN, new GlobalMedianBolt(Costant.ID15M, Costant.NUM_MEDIAN_15M_BOLT), Costant.NUM_GLOBAL_BOLT)
                  .shuffleGrouping(Costant.MEDIAN15M_BOLT);
 
@@ -103,9 +102,9 @@ public class Topology2 {
 
          tp.setBolt(Costant.GLOBAL24H_MEDIAN, new GlobalMedianBolt(Costant.ID24H, Costant.NUM_MEDIAN_24H_BOLT), Costant.NUM_GLOBAL_BOLT)
                  .shuffleGrouping(Costant.MEDIAN24H_BOLT);
-        tp.setBolt(Costant.MONGODB15M,updateBolt15M,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.GLOBAL15M_MEDIAN);
-        tp.setBolt(Costant.MONGODB1H,updateBolt1H,Costant.NUM_MONGOBOLT1H).shuffleGrouping(Costant.GLOBAL1H_MEDIAN);
-        tp.setBolt(Costant.MONGODB24H,updateBolt24H,Costant.NUM_MONGOBOLT24H).shuffleGrouping(Costant.GLOBAL24H_MEDIAN);
+        //tp.setBolt(Costant.MONGODB15M,updateBolt15M,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.GLOBAL15M_MEDIAN);
+        /*tp.setBolt(Costant.MONGODB1H,updateBolt1H,Costant.NUM_MONGOBOLT1H).shuffleGrouping(Costant.GLOBAL1H_MEDIAN);
+        tp.setBolt(Costant.MONGODB24H,updateBolt24H,Costant.NUM_MONGOBOLT24H).shuffleGrouping(Costant.GLOBAL24H_MEDIAN);*/
         return tp.createTopology();
     }
     public static KafkaSpoutConfig<String, JsonNode> getKafkaSpoutConfig(String bootstrapServers, String topicName, Properties properties) {

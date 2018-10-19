@@ -3,6 +3,7 @@ package sdcc2018.storm.entity.mongodb;
 import java.io.Serializable;
 
 public class IntersectionGUI implements Serializable {
+    private String id;
     private int idIntersection;
     private CustomSensor[] SensorList=new CustomSensor[4];
     private CustomPhase[] listPhase=new CustomPhase[2];

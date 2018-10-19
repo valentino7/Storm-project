@@ -1,6 +1,7 @@
 package sdcc2018.storm.query2.bolt;
 
 import com.tdunning.math.stats.AVLTreeDigest;
+import com.tdunning.math.stats.MergingDigest;
 import com.tdunning.math.stats.TDigest;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.IntersectionQuery2;
@@ -61,7 +62,8 @@ public class FilterMedianBolt extends BaseBasicBolt {
 
     private void mediana(IntersectionQuery2 c){
         //calcola mediana dell'incrocio
-        TDigest td1 = new AVLTreeDigest(Costant.COMPRESSION);
+        //TDigest td1 = new AVLTreeDigest(Costant.COMPRESSION);
+        TDigest td1 = new MergingDigest(Costant.COMPRESSION);
         for(int i=0;i!=Costant.SEM_INTERSEC;i++){
             td1.add(c.getL().get(i).getNumVehicles());
         }
