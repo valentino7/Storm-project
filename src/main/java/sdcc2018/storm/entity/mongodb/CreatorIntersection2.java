@@ -83,21 +83,6 @@ public class CreatorIntersection2 {
             }
             startLatitude+=rand.nextDouble();
         }
-        /*for(int id=0;id< Costant.N_INTERSECTIONS;id++){
-            CustomSensor customSensor[]=new CustomSensor[4];
-            for(int j=0;j<4;j++){
-                double saturation=7000;
-                double latitude=1;
-                double longitude=2;
-                customSensor[j]=new CustomSensor(id,j,saturation,latitude,longitude);
-            }
-            intersectionGUI=new IntersectionGUI(id,customSensor,CustomPhase.randomPhase());
-            System.out.println(intersectionGUI);
-            JsonNode jsonNode=objectMapper.valueToTree(intersectionGUI);
-            System.out.println(jsonNode);
-            document = Document.parse(jsonNode.toString() );
-            bookmarksCollection.insertOne(document);
-        }*/
         bookmarksCollection = database.getCollection(creator.properties.getProperty("collectionNameStateTrafficLight"));
 
         for(int id2=0;id2< Costant.N_INTERSECTIONS;id2++){
