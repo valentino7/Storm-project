@@ -1,8 +1,9 @@
 package sdcc2018.storm.query2.bolt;
 
-import com.tdunning.math.stats.AVLTreeDigest;
-import com.tdunning.math.stats.MergingDigest;
-import com.tdunning.math.stats.TDigest;
+
+import sdcc2018.digest.AVLTreeDigest;
+import sdcc2018.digest.MergingDigest;
+import sdcc2018.digest.TDigest;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.IntersectionQuery2;
 import org.apache.storm.topology.BasicOutputCollector;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class GlobalMedianBolt extends BaseBasicBolt {
     private int PreviousReplication;
-    private String MedianType ;
+    private String MedianType;
     private int countMedian = 0;
     private List<IntersectionQuery2> globalList=new ArrayList<>();
     //private TDigest globalTDIgest = new AVLTreeDigest(Costant.COMPRESSION);
@@ -35,7 +36,7 @@ public class GlobalMedianBolt extends BaseBasicBolt {
     }
 
     @Override
-    public void execute(Tuple tuple, BasicOutputCollector collector) {
+    public void execute(Tuple tuple, BasicOutputCollector collector){
         List<IntersectionQuery2> intersections;
         intersections= (List<IntersectionQuery2>) tuple.getValueByField(Costant.LIST_INTERSECTION);
         globalList.addAll(intersections);
@@ -43,10 +44,11 @@ public class GlobalMedianBolt extends BaseBasicBolt {
         for(int i=0;i!= intersections.size() ;i++){
             IntersectionQuery2 inter=intersections.get(i);
             TDigest t=inter.getTd1();
-            //globalTDIgest.add(intersections.get(i).getTd1());
-           // System.err.println("min : "+ t.getMin() + " max: "+ t.getMax());
-            globalTDIgest.add(t);
-
+            if(globalTDIgest==null)
+                globalTDIgest=t;
+            else {
+                globalTDIgest.add(t);
+            }
         }
         if(countMedian >= PreviousReplication) {
             ArrayList<IntersectionQuery2> listMax = new ArrayList<>();

@@ -48,6 +48,9 @@ public class Costant {
     public static final String ID_INTERSECTION = "idIntersection";
     public static final String ID_SENSOR = "idTrafficLight";
     public static final String ID_WINDOW = "idWindow";
+    public static final int NUM_GLOBAL_15M_BOLT = 1;
+    public static final int NUM_GLOBAL_1H_BOLT = 1;
+    public static final int NUM_GLOBAL_24H_BOLT = 1;
 
     public static int N_INTERSECTIONS = 50;
     public static int YELLOW_TIME = 4;

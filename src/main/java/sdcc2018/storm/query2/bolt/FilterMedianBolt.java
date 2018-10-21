@@ -1,8 +1,8 @@
 package sdcc2018.storm.query2.bolt;
 
-import com.tdunning.math.stats.AVLTreeDigest;
-import com.tdunning.math.stats.MergingDigest;
-import com.tdunning.math.stats.TDigest;
+import sdcc2018.digest.AVLTreeDigest;
+import sdcc2018.digest.MergingDigest;
+import sdcc2018.digest.TDigest;
 import sdcc2018.storm.entity.Costant;
 import sdcc2018.storm.entity.IntersectionQuery2;
 import sdcc2018.storm.entity.Sensor;
@@ -67,7 +67,7 @@ public class FilterMedianBolt extends BaseBasicBolt {
         for(int i=0;i!=Costant.SEM_INTERSEC;i++){
             td1.add(c.getL().get(i).getNumVehicles());
         }
-        c.setMedianaVeicoli(td1.quantile(Costant.QUANTIL));
+        //c.setMedianaVeicoli(td1.quantile(Costant.QUANTIL));
         c.setTd1(td1);
     }
 

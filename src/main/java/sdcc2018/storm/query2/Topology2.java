@@ -94,17 +94,17 @@ public class Topology2 {
 
          tp.setBolt(Costant.MEDIAN24H_BOLT, new MedianBolt().withTumblingWindow(Duration.seconds(5)), Costant.NUM_MEDIAN_24H_BOLT)
                  .fieldsGrouping(Costant.FILTER_QUERY_2,Costant.STREAM_24H, new Fields(Costant.ID_WINDOW));
-         tp.setBolt(Costant.GLOBAL15M_MEDIAN, new GlobalMedianBolt(Costant.ID15M, Costant.NUM_MEDIAN_15M_BOLT), Costant.NUM_GLOBAL_BOLT)
+         tp.setBolt(Costant.GLOBAL15M_MEDIAN, new GlobalMedianBolt(Costant.ID15M, Costant.NUM_GLOBAL_15M_BOLT), Costant.NUM_GLOBAL_BOLT)
                  .shuffleGrouping(Costant.MEDIAN15M_BOLT);
 
-         tp.setBolt(Costant.GLOBAL1H_MEDIAN, new GlobalMedianBolt(Costant.ID1H, Costant.NUM_MEDIAN_1H_BOLT), Costant.NUM_GLOBAL_BOLT)
+         tp.setBolt(Costant.GLOBAL1H_MEDIAN, new GlobalMedianBolt(Costant.ID1H, Costant.NUM_GLOBAL_1H_BOLT), Costant.NUM_GLOBAL_BOLT)
                  .shuffleGrouping(Costant.MEDIAN1H_BOLT);
 
-         tp.setBolt(Costant.GLOBAL24H_MEDIAN, new GlobalMedianBolt(Costant.ID24H, Costant.NUM_MEDIAN_24H_BOLT), Costant.NUM_GLOBAL_BOLT)
+         tp.setBolt(Costant.GLOBAL24H_MEDIAN, new GlobalMedianBolt(Costant.ID24H, Costant.NUM_GLOBAL_24H_BOLT), Costant.NUM_GLOBAL_BOLT)
                  .shuffleGrouping(Costant.MEDIAN24H_BOLT);
-        //tp.setBolt(Costant.MONGODB15M,updateBolt15M,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.GLOBAL15M_MEDIAN);
-        /*tp.setBolt(Costant.MONGODB1H,updateBolt1H,Costant.NUM_MONGOBOLT1H).shuffleGrouping(Costant.GLOBAL1H_MEDIAN);
-        tp.setBolt(Costant.MONGODB24H,updateBolt24H,Costant.NUM_MONGOBOLT24H).shuffleGrouping(Costant.GLOBAL24H_MEDIAN);*/
+        tp.setBolt(Costant.MONGODB15M,updateBolt15M,Costant.NUM_MONGOBOLT15M).shuffleGrouping(Costant.GLOBAL15M_MEDIAN);
+        tp.setBolt(Costant.MONGODB1H,updateBolt1H,Costant.NUM_MONGOBOLT1H).shuffleGrouping(Costant.GLOBAL1H_MEDIAN);
+        tp.setBolt(Costant.MONGODB24H,updateBolt24H,Costant.NUM_MONGOBOLT24H).shuffleGrouping(Costant.GLOBAL24H_MEDIAN);
         return tp.createTopology();
     }
     public static KafkaSpoutConfig<String, JsonNode> getKafkaSpoutConfig(String bootstrapServers, String topicName, Properties properties) {

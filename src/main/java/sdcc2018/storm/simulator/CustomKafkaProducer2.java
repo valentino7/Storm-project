@@ -80,7 +80,7 @@ public class CustomKafkaProducer2 {
             Sensor s;
             for (int i = 0; i < list.size(); i++) {
                 for (int j = 0; j < Costant.SEM_INTERSEC; j++) {
-                    if(i>=35){
+                    if(i>=50){
                         break;
                     }
                     CustomSensor customSensor=list.get(i).getSensorList()[j];

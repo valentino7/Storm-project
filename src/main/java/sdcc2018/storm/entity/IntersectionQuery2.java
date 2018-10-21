@@ -1,6 +1,7 @@
 package sdcc2018.storm.entity;
 
-import com.tdunning.math.stats.TDigest;
+
+import sdcc2018.digest.TDigest;
 
 import java.util.Comparator;
 import java.util.List;
