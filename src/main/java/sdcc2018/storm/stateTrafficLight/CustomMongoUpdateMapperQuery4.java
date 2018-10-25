@@ -19,7 +19,7 @@ public class CustomMongoUpdateMapperQuery4 implements MongoMapper {
         Document document = new Document();
         Sensor s = (Sensor) tuple.getValueByField(Costant.SENSOR);
         List<String> list = new ArrayList<>();
-        Document documentToAnnidate = new Document();
+        //Document documentToAnnidate = new Document();
         for ( int i = 0 ; i < s.getStateTrafficLight().size() ; i++){
             list.add(s.getStateTrafficLight().get(i));
         }
