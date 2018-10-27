@@ -11,7 +11,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-public class getData {
+public class GetData {
 
 
     private static String readAll(Reader rd) throws IOException {
@@ -60,6 +60,7 @@ public class getData {
                 JSONObject temp = (JSONObject) array.get(3);
                 String latency = (String) temp.get("completeLatency");
                 int emitted = (int) temp.get("emitted");
+                latency=latency.replaceAll(",",".");
                 sb.append(latency);
                 sb.append(' ');
                 sb.append(emitted);
