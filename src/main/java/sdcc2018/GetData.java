@@ -45,7 +45,7 @@ public class GetData {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("latency");
-        sb.append(' ');
+        sb.append(',');
         sb.append("emitted");
         sb.append('\n');
 
@@ -62,7 +62,7 @@ public class GetData {
                 int emitted = (int) temp.get("emitted");
                 latency=latency.replaceAll(",",".");
                 sb.append(latency);
-                sb.append(' ');
+                sb.append(',');
                 sb.append(emitted);
                 sb.append('\n');
 
