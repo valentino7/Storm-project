@@ -20,14 +20,40 @@ public class CreatorIntersection2 {
         InputStream is=this.getClass().getResourceAsStream("/config.properties");
         properties.load(is);
     }
-    public static CustomSensor[] getSensorsRandomPosition(int id,double intersectionLatitude,double intersectionLongitude){
+    public static CustomSensor[] getSensorsRandomPosition(int id,double intersectionLatitude,double intersectionLongitude,double maxDistIntersection,double possibleSaturations[]){
         CustomSensor customSensor[] =new CustomSensor[4];
-        for(int j=0;j<4;j++){
-            double saturation=7000;
-            double latitude=intersectionLatitude;
-            double longitude=intersectionLongitude;
-            customSensor[j]=new CustomSensor(id,j,saturation,latitude,longitude);
-        }
+        Random rand=new Random();
+        double maxLen=maxDistIntersection/2;
+        double saturation;
+        //sensore in alto a sinistra
+        int trafficLight=0;
+        int randomIndex=rand.nextInt(possibleSaturations.length);
+        saturation=possibleSaturations[randomIndex];
+        double sensorLatitude=intersectionLatitude+rand.nextDouble()*maxLen;
+        double sensorLongitude=intersectionLongitude-rand.nextDouble()*maxLen;
+        customSensor[trafficLight]=new CustomSensor(id,trafficLight,saturation,sensorLatitude,sensorLongitude);
+        trafficLight++;
+        //sensore in alto a destra
+        randomIndex=rand.nextInt(possibleSaturations.length);
+        saturation=possibleSaturations[randomIndex];
+        sensorLatitude=intersectionLatitude+rand.nextDouble()*maxLen;
+        sensorLongitude=intersectionLongitude+rand.nextDouble()*maxLen;
+        customSensor[trafficLight]=new CustomSensor(id,trafficLight,saturation,sensorLatitude,sensorLongitude);
+        trafficLight++;
+        //sensore in basso a destra
+        randomIndex=rand.nextInt(possibleSaturations.length);
+        saturation=possibleSaturations[randomIndex];
+        sensorLatitude=intersectionLatitude-rand.nextDouble()*maxLen;
+        sensorLongitude=intersectionLongitude+rand.nextDouble()*maxLen;
+        customSensor[trafficLight]=new CustomSensor(id,trafficLight,saturation,sensorLatitude,sensorLongitude);
+        trafficLight++;
+        //sensore in basso a sinistra
+        randomIndex=rand.nextInt(possibleSaturations.length);
+        saturation=possibleSaturations[randomIndex];
+        sensorLatitude=intersectionLatitude-rand.nextDouble()*maxLen;
+        sensorLongitude=intersectionLongitude-rand.nextDouble()*maxLen;
+        customSensor[trafficLight]=new CustomSensor(id,trafficLight,saturation,sensorLatitude,sensorLongitude);
+        trafficLight++;
         return customSensor;
     }
 
@@ -39,6 +65,8 @@ public class CreatorIntersection2 {
         System.err.println("collections removed");
     }
     public static void main(String args[])throws Exception{
+        //longitudine asse x
+        //latitudine asse y
         CreatorIntersection2 creator=new CreatorIntersection2();
         MongoClientURI connectionString = new MongoClientURI(creator.properties.getProperty("urlMongoDB"));
         MongoClient mongoClient = new MongoClient(connectionString);
@@ -48,11 +76,15 @@ public class CreatorIntersection2 {
         Document document;
         IntersectionGUI intersectionGUI=null;
         ObjectMapper objectMapper=new ObjectMapper();
+        double []possibleSaturations={6500,7000,7500,8000,8500};
+        double maxDistIntersection=1;
         int numIntersectionLongitude=10;
         int numIntersectionLatitude=5;
         Random rand = new Random();
-        double startLongitude=rand.nextDouble();
-        double startLatitude=rand.nextDouble();
+        double startLongitudeFix=100;
+        double startLatitudeFix=80;
+        double startLongitude=rand.nextDouble()+startLongitudeFix;
+        double startLatitude=rand.nextDouble()+startLatitudeFix;
         double randomLongitude=0;
         double randomLatitude=0;
         double intersectionLatitude;
@@ -67,13 +99,17 @@ public class CreatorIntersection2 {
                     intersectionLongitude=randomLongitude;
                 }
                 else {
-                    randomLongitude += rand.nextDouble();
+                    randomLongitude += rand.nextDouble()*maxDistIntersection;
                     intersectionLatitude = randomLatitude;
                     intersectionLongitude = randomLongitude;
                 }
-                CustomSensor customSensor[];
-                customSensor=getSensorsRandomPosition(id,intersectionLatitude,intersectionLongitude);
-                intersectionGUI=new IntersectionGUI(id,customSensor,CustomPhase.randomPhase());
+                CustomSensor customSensors[];
+                customSensors=getSensorsRandomPosition(id,intersectionLatitude,intersectionLongitude,maxDistIntersection,possibleSaturations);
+                System.out.println(customSensors[0]);
+                System.out.println(customSensors[1]);
+                System.out.println(customSensors[2]);
+                System.out.println(customSensors[3]);
+                intersectionGUI=new IntersectionGUI(id,customSensors,CustomPhase.randomPhase());
                 System.out.println(intersectionGUI);
                 JsonNode jsonNode=objectMapper.valueToTree(intersectionGUI);
                 System.out.println(jsonNode);
@@ -81,7 +117,7 @@ public class CreatorIntersection2 {
                 bookmarksCollection.insertOne(document);
                 id++;
             }
-            startLatitude+=rand.nextDouble();
+            startLatitude+=rand.nextDouble()*maxDistIntersection;
         }
         bookmarksCollection = database.getCollection(creator.properties.getProperty("collectionNameStateTrafficLight"));
 

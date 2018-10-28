@@ -57,4 +57,8 @@ public class CustomSensor implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+    @Override
+    public String toString(){
+        return "intersection="+intersection+",trafficlight="+trafficLight+",saturatin="+saturation+",latitude="+latitude+",longitude="+longitude;
+    }
 }

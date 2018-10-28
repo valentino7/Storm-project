@@ -39,7 +39,7 @@ public class GetData {
         String ROOT_URL = "http://localhost:8080/api/v1/topology/topQuery2-2-1540470602";
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new File("test.csv"));
+            pw = new PrintWriter(new File("statistics.csv"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -50,8 +50,9 @@ public class GetData {
         sb.append('\n');
 
         int increment = 0;
+        int numData=50;
 
-        while(increment < 50){
+        while(increment < numData){
 
             try {
 
@@ -83,12 +84,6 @@ public class GetData {
         pw.write(sb.toString());
         pw.close();
         System.out.println("done!");
-
-
-
-
-
-
 
     }
 
