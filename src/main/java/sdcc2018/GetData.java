@@ -36,9 +36,9 @@ public class GetData {
     }
 
     public synchronized static void main(String[] args)  {
-        String ROOT_URL1 = "http://a31291431dfa211e8892306842849bf3-410372784.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery2-2-1541275241";
-        String ROOT_URL2="";
-        String ROOT_URL3="";
+        String ROOT_URL1 = "http://a31291431dfa211e8892306842849bf3-410372784.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery2-2-1541275241";//stringa top1
+        String ROOT_URL2="";//stringa top2
+        String ROOT_URL3="";//stringa top3
         PrintWriter pw1 = null;
         PrintWriter pw2 = null;
         PrintWriter pw3 = null;
