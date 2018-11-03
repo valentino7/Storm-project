@@ -36,36 +36,84 @@ public class GetData {
     }
 
     public synchronized static void main(String[] args)  {
-        String ROOT_URL = "http://localhost:8080/api/v1/topology/topQuery2-2-1540470602";
-        PrintWriter pw = null;
+        String ROOT_URL1 = "http://a31291431dfa211e8892306842849bf3-410372784.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery2-2-1541275241";
+        String ROOT_URL2="";
+        String ROOT_URL3="";
+        PrintWriter pw1 = null;
+        PrintWriter pw2 = null;
+        PrintWriter pw3 = null;
         try {
-            pw = new PrintWriter(new File("statistics.csv"));
+            pw1 = new PrintWriter(new File("statistics_top1.csv"));
+            pw2 = new PrintWriter(new File("statistics_top2.csv"));
+            pw3 = new PrintWriter(new File("statistics_control.csv"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("latency");
-        sb.append(',');
-        sb.append("emitted");
-        sb.append('\n');
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        StringBuilder sb3 = new StringBuilder();
+
+        sb1.append("latency");
+        sb1.append(',');
+        sb1.append("emitted");
+        sb1.append('\n');
+
+        sb2.append("latency");
+        sb2.append(',');
+        sb2.append("emitted");
+        sb2.append('\n');
+
+        sb3.append("latency");
+        sb3.append(',');
+        sb3.append("emitted");
+        sb3.append('\n');
 
         int increment = 0;
-        int numData=50;
+        int numData=100;
 
         while(increment < numData){
 
             try {
 
-                JSONObject j = readJsonFromUrl(ROOT_URL);
-                JSONArray array = (JSONArray) j.get("topologyStats");
-                JSONObject temp = (JSONObject) array.get(3);
-                String latency = (String) temp.get("completeLatency");
-                int emitted = (int) temp.get("emitted");
-                latency=latency.replaceAll(",",".");
-                sb.append(latency);
-                sb.append(',');
-                sb.append(emitted);
-                sb.append('\n');
+                JSONObject j1 = readJsonFromUrl(ROOT_URL1);
+                JSONObject j2 = readJsonFromUrl(ROOT_URL2);
+                JSONObject j3 = readJsonFromUrl(ROOT_URL3);
+
+                JSONArray array1 = (JSONArray) j1.get("topologyStats");
+                JSONArray array2 = (JSONArray) j1.get("topologyStats");
+                JSONArray array3 = (JSONArray) j1.get("topologyStats");
+
+                JSONObject temp1 = (JSONObject) array1.get(3);
+                JSONObject temp2 = (JSONObject) array1.get(3);
+                JSONObject temp3 = (JSONObject) array1.get(3);
+
+                String latency1 = (String) temp1.get("completeLatency");
+                String latency2 = (String) temp1.get("completeLatency");
+                String latency3 = (String) temp1.get("completeLatency");
+
+                int emitted1 = (int) temp1.get("emitted");
+                int emitted2 = (int) temp1.get("emitted");
+                int emitted3 = (int) temp1.get("emitted");
+
+                latency1=latency1.replaceAll(",",".");
+                latency2=latency2.replaceAll(",",".");
+                latency3=latency3.replaceAll(",",".");
+
+                System.out.println("latency1="+latency1+",emitted1="+emitted1+",latency2="+latency2+",emitted2="+emitted2+",latency3="+latency3+",emitted3="+emitted3);
+                sb1.append(latency1);
+                sb1.append(',');
+                sb1.append(emitted1);
+                sb1.append('\n');
+
+                sb2.append(latency1);
+                sb2.append(',');
+                sb2.append(emitted1);
+                sb2.append('\n');
+
+                sb3.append(latency1);
+                sb3.append(',');
+                sb3.append(emitted1);
+                sb3.append('\n');
 
             } catch(MalformedURLException ex) {
                 ex.printStackTrace();
@@ -73,7 +121,7 @@ public class GetData {
                 ioex.printStackTrace();
             }
             try {
-                Thread.sleep(6000);
+                Thread.sleep(8000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -81,8 +129,15 @@ public class GetData {
             increment++;
         }
 
-        pw.write(sb.toString());
-        pw.close();
+        pw1.write(sb1.toString());
+        pw1.close();
+
+        pw2.write(sb2.toString());
+        pw2.close();
+
+        pw3.write(sb3.toString());
+        pw3.close();
+
         System.out.println("done!");
 
     }
