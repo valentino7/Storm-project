@@ -80,20 +80,20 @@ public class GetData {
                 JSONObject j3 = readJsonFromUrl(ROOT_URL3);
 
                 JSONArray array1 = (JSONArray) j1.get("topologyStats");
-                JSONArray array2 = (JSONArray) j1.get("topologyStats");
-                JSONArray array3 = (JSONArray) j1.get("topologyStats");
+                JSONArray array2 = (JSONArray) j2.get("topologyStats");
+                JSONArray array3 = (JSONArray) j3.get("topologyStats");
 
                 JSONObject temp1 = (JSONObject) array1.get(3);
-                JSONObject temp2 = (JSONObject) array1.get(3);
-                JSONObject temp3 = (JSONObject) array1.get(3);
+                JSONObject temp2 = (JSONObject) array2.get(3);
+                JSONObject temp3 = (JSONObject) array3.get(3);
 
                 String latency1 = (String) temp1.get("completeLatency");
-                String latency2 = (String) temp1.get("completeLatency");
-                String latency3 = (String) temp1.get("completeLatency");
+                String latency2 = (String) temp2.get("completeLatency");
+                String latency3 = (String) temp3.get("completeLatency");
 
                 int emitted1 = (int) temp1.get("emitted");
-                int emitted2 = (int) temp1.get("emitted");
-                int emitted3 = (int) temp1.get("emitted");
+                int emitted2 = (int) temp2.get("emitted");
+                int emitted3 = (int) temp3.get("emitted");
 
                 latency1=latency1.replaceAll(",",".");
                 latency2=latency2.replaceAll(",",".");
@@ -105,14 +105,14 @@ public class GetData {
                 sb1.append(emitted1);
                 sb1.append('\n');
 
-                sb2.append(latency1);
+                sb2.append(latency2);
                 sb2.append(',');
-                sb2.append(emitted1);
+                sb2.append(emitted2);
                 sb2.append('\n');
 
-                sb3.append(latency1);
+                sb3.append(latency3);
                 sb3.append(',');
-                sb3.append(emitted1);
+                sb3.append(emitted3);
                 sb3.append('\n');
 
             } catch(MalformedURLException ex) {
