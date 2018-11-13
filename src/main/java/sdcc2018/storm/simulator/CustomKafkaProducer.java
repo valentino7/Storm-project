@@ -40,6 +40,7 @@ public class CustomKafkaProducer {
         customKafkaProducer.properties.put(ProducerConfig.CLIENT_ID_CONFIG, "KafkaExampleProducer");
         customKafkaProducer.properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         customKafkaProducer.properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonSerializer");
+        System.out.println(customKafkaProducer.properties);
         KafkaProducer kafkaProducer = new KafkaProducer<>(customKafkaProducer.properties);
         ObjectMapper objectMapper=new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

@@ -36,16 +36,16 @@ public class GetData {
     }
 
     public synchronized static void main(String[] args)  {
-        String ROOT_URL1 = "http://a31291431dfa211e8892306842849bf3-410372784.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery2-2-1541275241";//stringa top1
-        String ROOT_URL2="";//stringa top2
-        String ROOT_URL3="";//stringa top3
+        String ROOT_URL1 ="http://a9723e15ee5c711e8b34b023124c2344-257485846.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery1-1-1541950926";
+        String ROOT_URL2="http://a9723e15ee5c711e8b34b023124c2344-257485846.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topQuery2-2-1541950949";//stringa top1
+        String ROOT_URL3="http://a9723e15ee5c711e8b34b023124c2344-257485846.us-west-2.elb.amazonaws.com:8080/api/v1/topology/topTrafficControl-3-1541950963";//stringa top3
         PrintWriter pw1 = null;
         PrintWriter pw2 = null;
         PrintWriter pw3 = null;
         try {
-            pw1 = new PrintWriter(new File("statistics_top1.csv"));
-            pw2 = new PrintWriter(new File("statistics_top2.csv"));
-            pw3 = new PrintWriter(new File("statistics_control.csv"));
+            pw1 = new PrintWriter(new File("statistics2_top1.csv"));
+            pw2 = new PrintWriter(new File("statistics2_top2.csv"));
+            pw3 = new PrintWriter(new File("statistics2_control.csv"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -100,6 +100,7 @@ public class GetData {
                 latency3=latency3.replaceAll(",",".");
 
                 System.out.println("latency1="+latency1+",emitted1="+emitted1+",latency2="+latency2+",emitted2="+emitted2+",latency3="+latency3+",emitted3="+emitted3);
+                
                 sb1.append(latency1);
                 sb1.append(',');
                 sb1.append(emitted1);

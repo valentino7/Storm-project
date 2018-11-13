@@ -43,7 +43,7 @@ public class Topology1 {
         Config conf=this.getConfig();
         if (args != null && args.length > 0) {
             System.out.println("argument1=" + args[0]);
-            conf.setNumWorkers(3);
+            conf.setNumWorkers(1);
             StormSubmitter.submitTopologyWithProgressBar(properties.getProperty("topologyName1"), conf, this.getTopologyKafkaSpout(getKafkaSpoutConfig(properties.getProperty("kafka.brokerurl"),properties.getProperty("kafka.topic"),this.properties)));
         } else {
             System.out.println("Create local cluster");
