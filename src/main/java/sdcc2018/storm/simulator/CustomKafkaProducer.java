@@ -81,9 +81,10 @@ public class CustomKafkaProducer {
             double max = 80;
             double min = 0;
             Sensor s;
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < 50 ;i++) {
                 for (int j = 0; j < Costant.SEM_INTERSEC; j++) {
                     CustomSensor customSensor=list.get(i).getSensorList()[j];
+
                     StateSensor stateSensor = listSensor.get(4*i+j);
                     double randomNumber=rand.nextDouble();
                     if(randomNumber<Costant.PROB_TO_BREAK){
