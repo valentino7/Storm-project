@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: supervisor
+spec:
+  ports:
+    - name: sv0
+      port: 6700
+    - name: sv1
+      port: 6701
+    - name: sv2
+      port: 6702
+    - name: sv3
+      port: 6703
+    - name: sv4
+      port: 6704
+    - name: sv5
+      port: 6705
+    - name: sv6
+      port: 6706
+    - name: sv7
+      port: 6707
+  selector:
+    app: supervisor

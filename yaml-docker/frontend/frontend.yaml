@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: todos
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: master
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: todos
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: master
+    spec:
+      containers:
+      - name: master
+        image: anthony2801/sdccfrontend
+        ports:
+        - containerPort: 3000

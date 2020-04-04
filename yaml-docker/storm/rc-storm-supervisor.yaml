@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: supervisor
+spec:
+  replicas: 1
+  selector:
+    app: supervisor
+  template:
+    metadata:
+      labels:
+        app: supervisor
+    spec:
+      containers:
+      - name: supervisor
+        image: anthony2801/storm-supervisor
+        ports:
+        - name: sv0
+          hostPort: 6700
+          containerPort: 6700
+        - name: sv1
+          hostPort: 6701
+          containerPort: 6701
+        - name: sv2
+          hostPort: 6702
+          containerPort: 6702
+        - name: sv3
+          hostPort: 6703
+          containerPort: 6703
+        - name: sv4
+          hostPort: 6704
+          containerPort: 6704
+        - name: sv5
+          hostPort: 6705
+          containerPort: 6705
+        - name: sv6
+          hostPort: 6706
+          containerPort: 6706
+        - name: sv7
+          hostPort: 6707
+          containerPort: 6707
+
+  selector:
+    app: supervisor

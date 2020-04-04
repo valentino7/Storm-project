@@ -1,0 +1,160 @@
+0)requisiti:
+	1)scaricare eksctl,per verificare che è presente eseguire il comando "eksctl"
+	2)avere un file chiamato credentials in ~/.aws/credentials con le credenziali di aws,se non si hanno le credenziali installare aws cli(vedere su internet),eseguire il comando "aws configure" e impostare i campi che vengono proposti(i campi vengono presi dalla console di amazon dopo aver creato un utente IAM) ricordarsi che vano aggiunti i permessi all'utente)
+	3)avere il programma aws-iam-authenticator installato,per verificare che è presente il programma eseguire il comando "aws-iam-authenticator help"
+	4)scaricare kubectl,verificare che è installato con il comando "kubectl"
+
+1)avviare il cluster di nome sdcc con il comando: 
+	eksctl create cluster --name=sdcc --node-type=t2.medium
+
+1.1)andare nella cartella file_yaml e aprire li un terminale
+
+2)deployare dashboard:
+	seguire il punto 1 o il punto 2
+	1)avviare lo script start_dashboard 
+	oppure
+	2)kubectl create -f ~/file_yaml/dashboard/dashboard-deploy.yml
+
+	assegnare i permessi alla dashboard
+	kubectl create -f ~/file_yaml/dashboard/dashboard-admin.yml
+
+	aprire nuovo terminale ed eseguire kubectl proxy, si può fare con il comando
+	gnome-terminal -e "bash -c \"kubectl proxy; exec bash\""
+
+	aprire scheda del browser e incollare questo link
+	http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+	cliccare su skip nella scheda di autenticazione->la dashboard è attiva
+
+
+3)deployare zookeeeper
+	kubectl create -f ~/file_yaml/kafka/zookeeper.yml
+	kubectl create -f ~/file_yaml_test/kafka/zookeeper.yml
+	deployare il servizio kafka-service
+	kubectl create -f ~/file_yaml/kafka/kafka-service.yml
+	kubectl create -f ~/file_yaml_test/kafka/kafka-service.yml
+	opzionale:eseguire il comando per vedere se zookeeper è accessibile
+		echo ruok | nc ipzookeeper 2181; echo
+
+	copiare ip/hostname del loadbalancer con il comando
+	kubectl get service e incollarlo qui dopo l'"="
+	IP_LOAD_BALANCER=
+	eseguire il comando 
+	export IP_LOAD_BALANCER
+
+	inoltre incollarlo nel valore di advertised_host_name del file kafka-broker.yml
+
+4)deployare kafka-broker con il comando  
+	kubectl create -f ~/file_yaml/kafka/kafka-broker.yml
+	kubectl create -f ~/file_yaml_test/kafka/kafka-broker.yml
+	avviare simulatore(produttore di kafka) sul computer locale(vanno modificati i record che invia),ricordarsi di inserire l'ip del kafka broker
+	passi opzionali:
+	vedere la lista dei topic attivi
+	kafkacat -b ${IP_LOAD_BALANCER}:9092 -L
+
+	avviare produttore di kafka
+	kafkacat -b ${IP_LOAD_BALANCER}:9092 -t topic1 -P
+	scrivere e premere ctrl+c
+	avviare consumatore di kafka(-o offset da dove iniziare a consumare,-e esce con successo quando ha ricevuto tutti i messaggi, -b broker -t topic 	-C consumer)
+	kafkacat -o stored -e -b ${IP_LOAD_BALANCER}:9092 -t topic1 -C
+
+	vedere se il consumatore ha letto le stesse cose del produttore(produttore da termianale o simulatore codice java)
+	
+5)deployare storm con il comando:
+	./start_storm.sh
+
+6)creare file jar di un progetto maven(java)
+	per creare un jar dopo aver installato maven entrare dentro la directory di cui fare il jar(la directory del progetto) ed eseguire
+	mvn clean install
+
+7)copiare un file da una macchina locale ad un container remoto
+	Come fare in modo che la macchina virtuale/container su cui è eseguito storm abbia il jar con la topologia? Come inviare/allegare il jar?
+	con il comando kubectl cp
+	kubectl cp <file-spec-src> <file-spec-dest> -c <specific-container>
+
+	kubectl cp /tmp/foo <some-namespace>/<some-pod>:/tmp/bar
+	
+	kubectl cp ~/file_yaml/jar/file.jar default/nimbus:/bin    (pod nimbus e namespace default)
+
+8)runnare comando da macchia remota dentro il container
+	Come fare in modo che la macchina virtuale/container esegua un comando che è dato da kubectl in remoto rispetto al cluster?(serve per runnare la 	topologia su storm avviato,se il comando ha dei flag prima del comando mettere --)
+	usare kubectl exec specificando il pod e il cluster su cui è attivo storm
+	esempio kubectl exec nimbus ls
+	esempio 2 kubectl exec nimbus -- java -version (se ci sono i flag utilizzare --)
+	
+
+9)runnare una topologia su storm già avviato con i worker(gli argomenti sono opzionali)
+	[con gli argomenti è possibile runnare una topologia in particolare se il codice.jar contiene tutte le topologie]
+	
+	arg1 arg2 arg3 è la topologia iesima da runnare
+	il primo parametro è il jar del progetto
+	il secondo parametro è la topologia da runnare
+	si lancia dal pod di nimbus da ui
+	./storm jar project.jar sdcc2018.MainClass 1
+	avviare tale comando con i numeri da 1 a 4
+	avviare il kafkaproducer in locale perche non è stato deployato
+	caricare i container di backend e react
+	
+	esempio storm jar all-my-code_with_topologies.jar org.apache.storm.MyTopology arg1 arg2
+	storm jar all-my-code_with_topologies.jar path_from_jar_to_main_class.class arg1 arg2 arg3 ... argn
+	
+10)kubectl exec ./bin/storm jar file.jar <packages_to_main_class>.<main_class> arg1 arg2 arg3 ... argn
+
+10.1)killare topologia
+	 <nome_topologia>
+	es ./storm kill word-count
+11)distruggere il cluster di nome sdcc con
+        eksctl delete cluster --name=sdcc
+
+
+
+
+
+note:
+	la storm ui si può avviare senza avere ne zookeeper ne nimbus ne supervisor attivi (esegue senza mai terminare) e andare al link
+	http://ip_storm-ui:porta_storm-ui/index.html di default la porta dello storm-ui è 8080
+	nimbus(o supervisor) senza zookeeper dopo un timeout termina
+	nimbus(o supervisor) con zookeeper rimane running tutto il tempo
+
+
+Docker:
+	sudo docker build -t storm-base .  per buildare una immagine prendendo il docker file nella directory locale
+	sudo docker images per prendere l'id dell'immagine
+	sudo docker tag c759279540df cristen/storm-base:latest  al posto di latest mettere il valore del tag e dopo tag mettere l'id dell'immagine
+	sudo docker push cristen/storm-base
+
+rimuovere tutti i container e le immagini docker
+	# Delete every Docker containers
+	# Must be run first because images are attached to containers
+	sudo docker rm -f $(sudo docker ps -a -q)
+
+	# Delete every Docker image
+	sudo docker rmi -f $(sudo docker images -q)
+
+
+
+
+
+ELIMINARE LO STACK DA CLOUD FORMATION
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

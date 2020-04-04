@@ -1,0 +1,13 @@
+mancanti :9
+
+parzialmente ordinati:
+sistemare la latitudine e la longitudine per ogni semaforo di ogni incrocio
+la saturazione è fissata per tutti gli incroci?(scegliamo 4-5 valori di saturazione e ogni gruppo di incroci ha la stessa saturazione)
+calcolare tempo di latenza e throughput
+deployare spring
+deployare react
+sistemare la replicazione dei componenti adottati finora in modo opportuno(in modo tale che sembri effettivamente un sistema distribuito
+fare eventuali test
+rileggere traccia progetto per vedere se manca qualcosa
+fare relazione
+
