@@ -4,7 +4,7 @@
 Distributed system for urban traffic monitoring. The simulation data was automatically generated. They were taken from kafka and then passed to the Apache storm framework for processing the queries requested. The output data has been saved on MongoDB.
 
 
-### Framework
+### Frameworks
 
 - Apache Storm
 - Apache Kafka
